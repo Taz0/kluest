@@ -5,7 +5,7 @@ const _ = require("lodash");
 
 
 function compile(contractName) {
-  const filename = contractName.toLocaleLowerCase() + ".sol";
+  const filename = contractName + ".sol";
   const contractPath = path.resolve(__dirname, "contracts", filename);
   const source = fs.readFileSync(contractPath, "utf8");
 
@@ -17,7 +17,11 @@ function compile(contractName) {
     settings: { outputSelection: { "*": { "*": ["*"], }, }, },
   };
 
+  solc.compile
   const output = JSON.parse(solc.compile(JSON.stringify(input)));
+  if (!output.contracts) {
+    console.error(`Error compiling ${contractName}:\n${JSON.stringify(output, null, ' ')}`);
+  }  
   const contracts = output.contracts[filename];
   if (_.isUndefined(contracts)) {
     console.error(`Contracts were not generated`);
