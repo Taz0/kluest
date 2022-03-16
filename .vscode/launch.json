@@ -27,6 +27,12 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
-    }
+    },
+    {
+      "name": "Debug deploy",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run deploy"
+    },
   ]
 }

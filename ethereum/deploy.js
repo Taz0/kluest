@@ -1,26 +1,61 @@
-const constructorArguments = [100];
+const { ethers } = require('ethers');
+const fs = require("fs-extra");
+const path = require("path");
+const dotenv = require("dotenv");
+const dotenvPath = path.resolve(__dirname, ".env.local");
+dotenv.config({ path: dotenvPath });
 
-// deploy code will go here
-const HDWalletProvider = require("@truffle/hdwallet-provider");
-const Web3 = require("web3");
-const { abi, evm } = require("./compile");
+const contractArguments = [1];
 
-const provider = new HDWalletProvider(
-  "walnut sauce thought figure disease measure soda rally general anxiety live deer",
-  "https://rinkeby.infura.io/v3/041e74aabafd4e5dbddd910e7f8940f0"
-);
-const web3 = new Web3(provider);
+async function deployContract(contractName) {
+  const abi = loadAbi(contractName);
+  if (!abi) { console.error(`Error reading abi file ${abiPath}`); return flase; }
 
-const deploy = async () => {
-  const accounts = await web3.eth.getAccounts();
+  const bytecode = loadBytecode(contractName);
+  if (!bytecode) { console.error(`Error reading bytecode file ${bytecodePath}`); return false; }
 
-  console.log(`Attempting to deploy from account ${accounts[0]}`);
+  const account = loadAccount();
+  const factory = new ethers.ContractFactory(abi, bytecode, account);
 
-  const result = await new web3.eth.Contract(abi)
-    .deploy({ data: evm.bytecode.object, arguments: constructorArguments })
-    .send({ gas: "1000000", from: accounts[0] });
+  // Deploy, setting total supply to 100 tokens (assigned to the deployer)
+  const contract = await executeDeployment(factory, contractArguments);  
 
-  console.log("Contract deployed to", result.options.address);
-  provider.engine.stop();
-};
-deploy();
+  const participation = await contract.participation();
+  console.log(`Participation is ${participation}`);
+}
+
+function loadAbi(contractName) {
+  const buildFolder = path.resolve(process.cwd(), "bin/ethereum/contracts");
+  const abiPath = path.resolve(buildFolder, contractName + ".abi");
+  const abi = fs.readJsonSync(abiPath);
+  return abi;
+}
+
+function loadBytecode(contractName) {
+  const buildFolder = path.resolve(process.cwd(), "bin/ethereum/contracts");
+  const bytecodePath = path.resolve(buildFolder, contractName + ".bin");
+  const bytecode = fs.readFileSync(bytecodePath).toString();
+  return bytecode;
+}
+
+function loadAccount() {
+  const telosRPCDevNet = "https://testnet.telos.net/evm";
+  const providerTelos = new ethers.providers.JsonRpcProvider(telosRPCDevNet);
+  const wallet = ethers.Wallet.fromMnemonic(process.env.DEV_MNEMONIC);
+  const account = wallet.connect(providerTelos);
+  process.stdout.write("Account: "); console.dir(account);
+  return account;
+}
+
+async function executeDeployment(factory, contractArguments) {
+  const contract = await factory.deploy(contractArguments);
+  const deployTransaction = await contract.deployTransaction.wait();
+
+  process.stdout.write("Contract info: "); console.dir(contract);
+  process.stdout.write("\nTransaction info: "); console.dir(deployTransaction);
+  console.log("\n\n-- Contract deployed to", contract.address, "--");
+
+  return contract;
+}
+
+deployContract(process.argv.slice(2)[0]);

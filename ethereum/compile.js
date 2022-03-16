@@ -3,7 +3,6 @@ const fs = require("fs-extra");
 const solc = require("solc");
 const _ = require("lodash");
 
-
 function compile(contractName) {
   const filename = contractName + ".sol";
   const contractPath = path.resolve(__dirname, "contracts", filename);
@@ -17,7 +16,6 @@ function compile(contractName) {
     settings: { outputSelection: { "*": { "*": ["*"], }, }, },
   };
 
-  solc.compile
   const output = JSON.parse(solc.compile(JSON.stringify(input)));
   if (!output.contracts) {
     console.error(`Error compiling ${contractName}:\n${JSON.stringify(output, null, ' ')}`);
