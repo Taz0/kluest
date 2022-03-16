@@ -1,15 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {checkBalances, Balance} from '../../lib/balance'
+import { getBalance } from '../../server/LMBalance'
+import { CryptoAddress } from '../../shared/SharedTypes';
 
-type Data = Balance[];
+type ResponseType = object;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  console.log(`Checking balances`);
-  const balances = await checkBalances();
-  console.log(`Checking finished`);
-  res.status(200).json(balances);
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
+  const addressParam = req.body.address;
+  if (_.isUndefined(addressParam)) {
+    console.error(`No param address found in body`);
+    const response = { json: { result: 'Invalid params' } };
+    res.status(401).json(response);
+    return;
+  }
+
+  const address = addressParam as CryptoAddress;
+  console.log(`Checking balance of address ${address}`);
+  const amount = await getBalance(address);
+  console.log(`Checking finished result ${amount}`);
+  res.status(200).json({ result: { amount: amount } });
 }
