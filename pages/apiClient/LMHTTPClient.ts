@@ -16,14 +16,11 @@ class LMHTTPClient {
   static async getBalance(address: CryptoAddress): Promise<BalanceResponse> {        
     const response = await ky.post(LMHTTPClient.balanceEndPoint, { json: { address: address } }).json() as any;
     const result = response.result;
-    console.dir(result);
     const balanceResponse = (result as BalanceResponse);
     if (_.isNumber(balanceResponse.amount)) {
       return balanceResponse;
     }
-    console.log(typeof balanceResponse);
-    return balanceResponse;
-    // throw new Error("Invalid Params");
+    throw new Error("Invalid Params");
   }
 }
 

@@ -6,20 +6,29 @@ import LMHTTPClient from './apiClient/LMHTTPClient';
 const Balance: NextPage = () => {
 
   const [validated, setValidated] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [balance, setBalance] = useState(-1);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
+
+    if (isLoading) {
+      return;
+    }
+
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
       console.log(`get Balance from Crypto address ${address}`);
+      setBalance(-1);
+      setLoading(true);
       LMHTTPClient.getBalance(address)
         .then((response) => {
           const amount = response.amount as number;
           console.log(`balance is ${amount}`);
-          setBalance(amount); 
+          setBalance(amount);
+          setLoading(false);
         }).catch((error) => {
           console.error(error);
         });
@@ -30,7 +39,7 @@ const Balance: NextPage = () => {
   return (
     <main>
       <Container fluid>
-        <h1>Balances..</h1>
+        <h1>Balances:</h1>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group className="mb-3" controlId="formWalletAddress">
@@ -41,11 +50,11 @@ const Balance: NextPage = () => {
               </Form.Text>
             </Form.Group>
           </Row>
-          <Button type="submit">Get Balance</Button>
+          <Button variant="primary" disabled={isLoading} type="submit">
+            {isLoading ? 'Loading...' : 'Get Balance'}
+          </Button>
+          {showBalance()}
         </Form>
-
-        {showBalance()}
-
       </Container>
     </main>
   )
@@ -56,7 +65,7 @@ const Balance: NextPage = () => {
       return undefined;
     }
 
-    return (<Row id="1">Balance is {balance}</Row>);
+    return (<span className="m-3">Balance is {balance}</span>);
   }
 }
 
