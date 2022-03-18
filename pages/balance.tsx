@@ -46,7 +46,7 @@ const Balance: NextPage = () => {
               <Form.Label>Wallet address</Form.Label>
               <Form.Control required type="text" placeholder="0x123456789..." defaultValue="0xD8Ff420622449bfFa9C1284004a5D50b7b2e637F" />
               <Form.Text className="text-muted">
-                We'll never share your wallet with anyone else.
+                We&apos;ll never share your wallet with anyone else.
               </Form.Text>
             </Form.Group>
           </Row>
