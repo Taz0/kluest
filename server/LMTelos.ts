@@ -13,8 +13,8 @@ export function getProvider(): EthersProvider {
   return providerTelos;
 }
 
-export async function loadContract(address: CryptoAddress, abiFilename: string) {
-  const abi = loadAbi(abiFilename);
+export async function loadContract(address: CryptoAddress, abiFilename?: string): Promise<any> {
+  const abi = loadAbi(abiFilename || 'TokenERC20');
   const provider = getProvider();
   const contract = new ethers.Contract(address, abi, provider);
   const name = await contract.name();

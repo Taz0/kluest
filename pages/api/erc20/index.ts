@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getBalance } from '../../../server/LMBalance'
+import { getTelosBalance } from '../../../server/LMBalance'
 import { CryptoAddress } from '../../../shared/SharedTypes';
 
 type ResponseType = object;
@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const address = addressParam as CryptoAddress;
   console.log(`Checking balance of address ${address}`);
-  const amount = await getBalance(address);
+  const amount = await getTelosBalance(address);
   console.log(`Checking finished result ${amount}`);
   res.status(200).json({ result: { amount: amount } });
 }

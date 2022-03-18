@@ -10,6 +10,7 @@ function compile(contractName) {
 
   console.log(`Compiling ${contractName}...`);
 
+  ///TODO: Fix input to load node_modules
   const input = {
     language: "Solidity",
     sources: { [filename]: { content: source, }, },

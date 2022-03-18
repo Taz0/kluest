@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { CryptoAddress } from '../shared/SharedTypes';
+import { loadContract } from './LMTelos';
 
 export interface Balance {
   name: string,
@@ -7,8 +8,21 @@ export interface Balance {
   balance?: number
 }
 
-export async function getBalance(address: CryptoAddress): Promise<number> {
+export async function getTokenBalance(address: CryptoAddress, tokenContract: CryptoAddress): Promise<number> {
+  if (typeof window !== "undefined") {
+    console.error(`Running in browser bye bye 👋`);
+    return -1;
+  }
 
+  const contract = await loadContract(tokenContract);
+  const balance = await contract.balanceOf(address);
+  const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
+  const amount = Number.parseFloat(etherDecimals.toFixed(6));
+
+  return amount;
+}
+
+export async function getTelosBalance(address: CryptoAddress): Promise<number> {
   if (typeof window !== "undefined") {
     console.error(`Running in browser bye bye 👋`);
     return -1;
