@@ -17,7 +17,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-    const address = addressParam as CryptoAddress;
+  const address = addressParam as CryptoAddress;
+  try {
     await airdrop50ToUser(address);
     res.status(200).json({ result: true });
+  } catch (ex) {
+    const exception = ex as any;
+    const resultBody = exception?.error?.error?.body;
+    let errorMessage;
+    if (_.isString(resultBody)) {
+      errorMessage = JSON.parse(resultBody).error.message;
+    }
+    res.status(501).json({ result: false, message: errorMessage || 'Unknown' });
+    return;
+  }
+
 }
