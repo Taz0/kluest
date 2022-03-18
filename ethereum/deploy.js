@@ -36,7 +36,6 @@ function loadAccount() {
   const providerTelos = new ethers.providers.JsonRpcProvider(telosRPCDevNet);
   const wallet = ethers.Wallet.fromMnemonic(process.env.DEV_MNEMONIC);
   const account = wallet.connect(providerTelos);
-  // process.stdout.write("Account: "); console.dir(account);
   return account;
 }
 

@@ -9,7 +9,10 @@
     "lint": "next lint",
     "compile": "node ethereum/compile.js",
     "deploy": "node ethereum/deploy.js",
-    "test": "mocha"
+    "test": "mocha",
+    "compileToken": "solc --overwrite --abi --bin ethereum/contracts/TokenERC20.sol -o ethereum/build",
+    "deployToken": "npm run deploy TokenERC20 LightMancito LMT 1000",
+    "compileAndDeployToken": "npm run compileToken && npm run deployToken"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",

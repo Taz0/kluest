@@ -20,10 +20,10 @@ const Balance: NextPage = () => {
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
-      console.log(`get Balance from Crypto address ${address}`);
+      const tokenAddress = form.formTokenAddress.value;
       setBalance(-1);
       setLoading(true);
-      LMHTTPClient.getBalance(address)
+      LMHTTPClient.getBalance(address, tokenAddress)
         .then((response) => {
           const amount = response.amount as number;
           console.log(`balance is ${amount}`);
@@ -38,8 +38,8 @@ const Balance: NextPage = () => {
 
   return (
     <main>
-      <Container fluid>
-        <h1>Balances:</h1>
+      <Container>
+        <h1>Telos EVM Test Balance:</h1>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group className="mb-3" controlId="formWalletAddress">
@@ -50,14 +50,23 @@ const Balance: NextPage = () => {
               </Form.Text>
             </Form.Group>
           </Row>
+          <Row className="mb-3">
+            <Form.Group className="mb-3" controlId="formTokenAddress">
+              <Form.Label>Token contract address</Form.Label>
+              <Form.Control type="text" placeholder="0x123456789..." defaultValue="" />
+              <Form.Text className="text-muted">
+                If empty, you will get the balance from the Telos network
+              </Form.Text>
+            </Form.Group>
+          </Row>
           <Button variant="primary" disabled={isLoading} type="submit">
             {isLoading ? 'Loading...' : 'Get Balance'}
           </Button>
           {showBalance()}
         </Form>
       </Container>
-    </main>
-  )
+    </main >
+  );
 
   function showBalance(): ReactElement | undefined {
     console.log(`Executing balance ${balance}`);

@@ -23,11 +23,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const amount = await getTokenBalance(addressParam, tokenAddressParam);
     console.log(`Checking finished result ${amount}`);
     res.status(200).json({ result: { amount: amount } });
-  } else {
-    const address = addressParam as CryptoAddress;
-    console.log(`Checking balance of address ${address}`);
-    const amount = await getTelosBalance(address);
+    return;
+  }
+
+  // Load token contract, by default loads TokenERC20.abi
+  const tokenContract = process.env.ENV_TOKEN_CONTRACT;
+  if (_.isString(tokenContract)) {
+    const amount = await getTokenBalance(addressParam, tokenContract);
     console.log(`Checking finished result ${amount}`);
     res.status(200).json({ result: { amount: amount } });
+    return;
   }
+
+  const address = addressParam as CryptoAddress;
+  console.log(`Checking balance of address ${address}`);
+  const amount = await getTelosBalance(address);
+  console.log(`Checking finished result ${amount}`);
+  res.status(200).json({ result: { amount: amount } });
 }
