@@ -32,7 +32,13 @@
       "name": "Debug deploy",
       "type": "node-terminal",
       "request": "launch",
-      "command": "npm run deploy"
+      "command": "npm run deploy lottery"
+    },
+    {
+      "name": "Debug compile",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run compile lottery"
     },
   ]
 }

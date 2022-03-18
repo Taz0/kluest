@@ -13,13 +13,13 @@ function compile(contractName) {
   const input = {
     language: "Solidity",
     sources: { [filename]: { content: source, }, },
-    settings: { outputSelection: { "*": { "*": ["*"], }, }, },
+    settings: { outputSelection: { "*": { "*": ["abi", "evm.bytecode"] } } }
   };
 
   const output = JSON.parse(solc.compile(JSON.stringify(input)));
   if (!output.contracts) {
     console.error(`Error compiling ${contractName}:\n${JSON.stringify(output, null, ' ')}`);
-  }  
+  }
   const contracts = output.contracts[filename];
   if (_.isUndefined(contracts)) {
     console.error(`Contracts were not generated`);
@@ -38,4 +38,5 @@ function compile(contractName) {
   console.log(`  Finished! ✅`);
 }
 
-compile(process.argv.slice(2)[0]);
+const argContractName = process.argv.slice(2)[0];
+compile(argContractName);
