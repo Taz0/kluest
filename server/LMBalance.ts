@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { CryptoAddress } from '../shared/SharedTypes';
 import { loadContract } from './LMTelos';
+import _ from 'lodash';
 
 export interface Balance {
   name: string,

@@ -1,14 +1,14 @@
 import type { NextPage } from 'next'
 import { Form, Row, Button, Container } from 'react-bootstrap'
 import { ReactElement, useState } from 'react'
-import LMHTTPClient from '../httpClient/LMHTTPClient';
-import { CryptoAddress } from '../shared/SharedTypes';
+import LMHTTPClient, { AirDropResponse } from './httpClient/LMHTTPClient';
+import _ from 'lodash';
 
 const AirDrop: NextPage = () => {
 
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [balance, setBalance] = useState(-1);
+  const [airDropResult, setAirDropResult] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,13 +21,17 @@ const AirDrop: NextPage = () => {
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
-      setBalance(-1);
+      setAirDropResult("");
       setLoading(true);
-      LMHTTPClient.getBalance(address)
+      LMHTTPClient.sendAirDrop(address)
         .then((response) => {
-          const amount = response.amount as number;
-          console.log(`balance is ${amount}`);
-          setBalance(amount);
+          const result = response.result;
+          console.log(`airdrop result is ${result}`);
+          
+          if (!_.isUndefined(response.message)) {
+            setAirDropResult(response.message)
+          }
+
           setLoading(false);
         }).catch((error) => {
           console.error(error);
@@ -51,7 +55,7 @@ const AirDrop: NextPage = () => {
             </Form.Group>
           </Row>
           <Button variant="primary" disabled={isLoading} type="submit">
-            {isLoading ? 'Loading...' : 'Get Balance'}
+            {isLoading ? 'Loading...' : 'Execute air drop'}
           </Button>
           {showResult()}
         </Form>
@@ -60,24 +64,13 @@ const AirDrop: NextPage = () => {
   );
 
   function showResult(): ReactElement | undefined {
-    if (balance === -1) {
+    if (airDropResult.length === 0 || isLoading) {
       return undefined;
     }
 
-    return (<span className="m-3">AirDrop done, new balance ${balance}</span>);
+    return (<span className="m-3">AirDrop done, result ${airDropResult}</span>);
   }
 
-  async function getBalance(address: CryptoAddress) {
-    try {
-      const response = await LMHTTPClient.getBalance(address);
-      const amount = response.amount as number;
-      console.log(`balance is ${amount}`);
-      setBalance(amount);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  }
 }
 
 export default AirDrop

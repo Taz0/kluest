@@ -19,8 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const address = addressParam as CryptoAddress;
   try {
+    console.log(`Ejecutando airdrop a ${address}`);
     await airdrop50ToUser(address);
-    res.status(200).json({ result: true });
+    res.status(200).json({ result: true, message: 'Air Drop executed successfully' });
   } catch (ex) {
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
@@ -28,8 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (_.isString(resultBody)) {
       errorMessage = JSON.parse(resultBody).error.message;
     }
-    res.status(501).json({ result: false, message: errorMessage || 'Unknown' });
-    return;
+    res.status(200).json({ result: false, message: errorMessage || 'Unknown error' });
   }
-
 }

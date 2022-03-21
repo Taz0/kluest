@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { Form, Row, Button, Container } from 'react-bootstrap'
 import { ReactElement, useState } from 'react'
-import LMHTTPClient from './apiClient/LMHTTPClient';
+import LMHTTPClient from './httpClient/LMHTTPClient';
 
 const Balance: NextPage = () => {
 
@@ -12,10 +12,6 @@ const Balance: NextPage = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (isLoading) {
-      return;
-    }
 
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
@@ -36,6 +32,8 @@ const Balance: NextPage = () => {
     setValidated(true);
   };
 
+  console.log('client sever url', process.env.NEXT_PUBLIC_SERVER_URL);
+
   return (
     <main>
       <Container>
@@ -53,9 +51,9 @@ const Balance: NextPage = () => {
           <Row className="mb-3">
             <Form.Group className="mb-3" controlId="formTokenAddress">
               <Form.Label>Token contract address</Form.Label>
-              <Form.Control type="text" placeholder="0x123456789..." defaultValue="" />
+              <Form.Control type="text" placeholder="0x123456789..." defaultValue="0x110Ba5f1A7b32E1B23183662C93b4F460d87688C" />
               <Form.Text className="text-muted">
-                If empty, you will get the balance from the Telos network
+                If empty, you will get the balance from default token contract.
               </Form.Text>
             </Form.Group>
           </Row>
@@ -69,7 +67,6 @@ const Balance: NextPage = () => {
   );
 
   function showBalance(): ReactElement | undefined {
-    console.log(`Executing balance ${balance}`);
     if (balance === -1) {
       return undefined;
     }

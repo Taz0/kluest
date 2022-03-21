@@ -2,7 +2,6 @@
 import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getTelosBalance, getTokenBalance } from '../../server/LMBalance'
-import { CryptoAddress } from '../../shared/SharedTypes';
 
 type ResponseType = object;
 
@@ -17,27 +16,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  const tokenAddressParam = req.body.tokenAddress;
-  if (_.isString(tokenAddressParam)) {
-    // Load token contract, by default loads TokenERC20.abi
-    const amount = await getTokenBalance(addressParam, tokenAddressParam);
-    console.log(`Checking finished result ${amount}`);
-    res.status(200).json({ result: { amount: amount } });
-    return;
+  let tokenAddress = req.body.tokenAddress;
+  if (_.isUndefined(tokenAddress) || tokenAddress.length === 0) {
+      tokenAddress = process.env.ENV_TOKEN_CONTRACT;
   }
 
-  // Load token contract, by default loads TokenERC20.abi
-  const tokenContract = process.env.ENV_TOKEN_CONTRACT;
-  if (_.isString(tokenContract)) {
-    const amount = await getTokenBalance(addressParam, tokenContract);
-    console.log(`Checking finished result ${amount}`);
-    res.status(200).json({ result: { amount: amount } });
-    return;
+  let amount;
+  if (_.isString(tokenAddress)) {
+    // The token contract address is defined, by param or in .env.loval
+    amount = await getTokenBalance(addressParam, tokenAddress);
+  } else {
+    amount = await getTelosBalance(addressParam);
+    console.log(`Telos balance amount ${amount}`);
   }
 
-  const address = addressParam as CryptoAddress;
-  console.log(`Checking balance of address ${address}`);
-  const amount = await getTelosBalance(address);
-  console.log(`Checking finished result ${amount}`);
   res.status(200).json({ result: { amount: amount } });
 }

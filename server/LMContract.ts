@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { CryptoAddress } from '../shared/SharedTypes';
 import { loadContract } from './LMTelos';
 
