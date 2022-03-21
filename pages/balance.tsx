@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { Form, Row, Button, Container } from 'react-bootstrap'
 import { ReactElement, useState } from 'react'
-import LMHTTPClient from './httpClient/LMHTTPClient';
+import LMHTTPClient from '../utils/httpClient/LMHTTPClient';
 
 const Balance: NextPage = () => {
 

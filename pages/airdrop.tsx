@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import { Form, Row, Button, Container } from 'react-bootstrap'
 import { ReactElement, useState } from 'react'
-import LMHTTPClient, { AirDropResponse } from './httpClient/LMHTTPClient';
+import LMHTTPClient, { AirDropResponse } from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
 
 const AirDrop: NextPage = () => {
