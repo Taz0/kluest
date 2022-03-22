@@ -62,6 +62,8 @@ COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/next.config.js  ./
 # 5. Copy prod file to .env.local files
 COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.env.prod  ./.env.local
 
+COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/ethereum/build ./ethereum/build
+
 USER nextjs
 
 EXPOSE 3000

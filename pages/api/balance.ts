@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   let tokenAddress = req.body.tokenAddress;
   if (_.isUndefined(tokenAddress) || tokenAddress.length === 0) {
-      tokenAddress = process.env.ENV_TOKEN_CONTRACT;
+      tokenAddress = process.env.TOKEN_CONTRACT;
   }
 
   let amount;

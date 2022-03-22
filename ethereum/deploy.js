@@ -34,7 +34,7 @@ function loadBytecode(contractName) {
 function loadAccount() {
   const telosRPCDevNet = "https://testnet.telos.net/evm";
   const providerTelos = new ethers.providers.JsonRpcProvider(telosRPCDevNet);
-  const wallet = ethers.Wallet.fromMnemonic(process.env.DEV_MNEMONIC);
+  const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC);
   const account = wallet.connect(providerTelos);
   return account;
 }
