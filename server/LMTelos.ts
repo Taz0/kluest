@@ -46,7 +46,10 @@ function getAccount() {
   const providerTelos = new ethers.providers.JsonRpcProvider(telosRPCDevNet);
   const mnemonic = process.env.MNEMONIC;
   if (!_.isString(mnemonic)) {
-    throw new Error("mnemoic was not defined!")
+    console.error("mnemonic was not defined!");
+    throw new Error("mnemonic was not defined!")
+  } else {
+    console.log(`mnemonic: ${mnemonic.substring(0, 5)}...`);
   }
   const wallet = ethers.Wallet.fromMnemonic(mnemonic);
   return wallet.connect(providerTelos);

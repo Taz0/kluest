@@ -15,8 +15,6 @@ export interface AirDropResponse {
 
 class LMHTTPClient {
 
-  static baseURL = process.env.NEXT_PUBLIC_SERVER_URL;
-
   static async getBalance(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<BalanceResponse> {
     const endpoint = `/api/balance`;
     console.log(`Haciendo post a ${endpoint}`);
