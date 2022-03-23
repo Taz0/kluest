@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
+// In order to use it in remix delete "../../node_modules/. IE: import "@openzeppelin/contracts/access/Ownable.sol";
+import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../../node_modules/@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract TokenERC20 is ERC20, ERC20Burnable, Ownable {
-
-    using SafeERC20 for IERC20;
 
     mapping (address => bool) usersAirdropped;
 
@@ -21,9 +19,9 @@ contract TokenERC20 is ERC20, ERC20Burnable, Ownable {
 
     function userAirdrop50(address user) public onlyOwner {
         require(!usersAirdropped[user], "User address has been already air dropped");
+        ///TODO: Do it in two steps in node to 'await' for the allowance transaction, and then perform the safe transfer
         //SafeERC20.safeIncreaseAllowance(this, owner(), 50 * 10**uint(decimals()));
         //SafeERC20.safeTransferFrom(this, owner(), user, 50 * 10**uint(decimals()));
-        ///TODO: Do it in two steps in node to 'await' for the allowance transaction, and then perform the safe transfer
         transfer(user, 50 ether);
         usersAirdropped[user] = true;
     }

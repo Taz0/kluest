@@ -59,8 +59,13 @@ COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.next ./.next
 # 4. OPTIONALLY the next.config.js, if your app has one
 COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/next.config.js  ./
 
+
 # 5. Copy prod file to .env.local files
 COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.env.prod  ./.env.local
+
+# 5. Ethereum abi contracts
+RUN mkdir -p ethereum/build
+COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/ethereum/build/*.abi  ./ethereum/build
 
 USER nextjs
 

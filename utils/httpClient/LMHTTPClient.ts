@@ -18,7 +18,7 @@ class LMHTTPClient {
   static baseURL = process.env.NEXT_PUBLIC_SERVER_URL;
 
   static async getBalance(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<BalanceResponse> {
-    const endpoint = `${LMHTTPClient.baseURL}/api/balance`;
+    const endpoint = `/api/balance`;
     console.log(`Haciendo post a ${endpoint}`);
 
     const response = await ky.post(endpoint, { json: { address: address, tokenAddress: tokenAddress } }).json() as any;
@@ -31,7 +31,7 @@ class LMHTTPClient {
   }
 
   static async sendAirDrop(address: CryptoAddress): Promise<AirDropResponse> {
-    const endpoint = `${LMHTTPClient.baseURL}/api/airDrop`;
+    const endpoint = `/api/airDrop`;
     console.log(`Haciendo post a ${endpoint}`);
 
     const response = await ky.post(endpoint, { json: { address: address } }).json() as any;
