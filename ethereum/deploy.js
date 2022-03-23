@@ -2,7 +2,7 @@ const { ethers } = require('ethers');
 const fs = require("fs-extra");
 const path = require("path");
 const dotenv = require("dotenv");
-const dotenvPath = path.resolve(__dirname, ".env.local");
+const dotenvPath = path.resolve(__dirname, ".env.development.local");
 dotenv.config({ path: dotenvPath });
 
 const buildFolder = path.resolve(process.cwd(), "ethereum", "build");
@@ -34,6 +34,7 @@ function loadBytecode(contractName) {
 function loadAccount() {
   const telosRPCDevNet = "https://testnet.telos.net/evm";
   const providerTelos = new ethers.providers.JsonRpcProvider(telosRPCDevNet);
+  console.log(`Using mnemonic ${process.env.MNEMONIC.substring(0, 5)}`);
   const wallet = ethers.Wallet.fromMnemonic(process.env.MNEMONIC);
   const account = wallet.connect(providerTelos);
   return account;
