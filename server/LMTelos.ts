@@ -10,7 +10,7 @@ export async function loadTokenContract(): Promise<any> {
   const abi = loadAbi('TokenERC20');
   // const provider = getProvider();
   const account = getAccount();
-  const tokenContract = process.env.ENV_TOKEN_CONTRACT as CryptoAddress;
+  const tokenContract = process.env.TOKEN_CONTRACT as CryptoAddress;
   if (!_.isString(tokenContract)){
     throw new Error("No token contract address has been defined!");
   }
@@ -44,7 +44,7 @@ function loadAbi(filename: string): any {
 function getAccount() {
   const telosRPCDevNet = "https://testnet.telos.net/evm";
   const providerTelos = new ethers.providers.JsonRpcProvider(telosRPCDevNet);
-  const mnemonic = process.env.ENV_DEV_MNEMONIC;
+  const mnemonic = process.env.MNEMONIC;
   if (!_.isString(mnemonic)) {
     throw new Error("mnemoic was not defined!")
   }

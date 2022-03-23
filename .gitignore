@@ -13,7 +13,6 @@
 /out/
 
 # production
-/ethereum/build/
 /build
 /bin
 

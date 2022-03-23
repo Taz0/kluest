@@ -32,7 +32,7 @@ const Balance: NextPage = () => {
     setValidated(true);
   };
 
-  console.log('client sever url', process.env.NEXT_PUBLIC_SERVER_URL);
+  console.log('client sever url:', process.env.NEXT_PUBLIC_SERVER_URL);
 
   return (
     <main>
