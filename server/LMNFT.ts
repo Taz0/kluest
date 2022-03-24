@@ -1,5 +1,5 @@
 import { CryptoAddress } from '../shared/SharedTypes';
-import { loadNFTContract } from './LMTelos';
+import { loadNFTContract } from './LMContract';
 
 export async function giveItemUriToUser(address: CryptoAddress, uri: string): Promise<number> {
   if (typeof window !== "undefined") {

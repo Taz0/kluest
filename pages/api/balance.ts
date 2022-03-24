@@ -8,6 +8,11 @@ type ResponseType = object;
 // POST: obtain balance from address
 // PARAMS: - address: Hex address of the account
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
+  if (req.method !== 'POST') {
+    res.status(405).send({ message: 'Only POST requests allowed' })
+    return
+  }
+
   const addressParam = req.body.address;
   if (!_.isString(addressParam)) {
     console.error(`No param address found in body`);

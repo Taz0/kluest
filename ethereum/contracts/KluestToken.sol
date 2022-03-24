@@ -6,11 +6,11 @@ import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../../node_modules/@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
-contract TokenERC20 is ERC20, ERC20Burnable, Ownable {
+contract KluestToken is ERC20, ERC20Burnable, Ownable {
 
     mapping (address => bool) usersAirdropped;
 
-    constructor(string memory name, string memory symbol, uint initialKTokens) ERC20(name, symbol) {
+    constructor(uint initialKTokens) ERC20("Kluest", "KTT") {
         // Mint initialTokens tokens to msg.sender
         // Similar to how 1 dollar = 100 cents, 1 token = 1 * (10 ** decimals)
         // 1 ether is 10**18 decimals
@@ -24,5 +24,9 @@ contract TokenERC20 is ERC20, ERC20Burnable, Ownable {
         //SafeERC20.safeTransferFrom(this, owner(), user, 50 * 10**uint(decimals()));
         transfer(user, 50 ether);
         usersAirdropped[user] = true;
+    }
+
+    function userBuyItem(address user, uint256 amount) public onlyOwner {        
+        transferFrom(user, owner(), amount);
     }
 }
