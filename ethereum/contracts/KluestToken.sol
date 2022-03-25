@@ -29,4 +29,9 @@ contract KluestToken is ERC20, ERC20Burnable, Ownable {
     function userBuyItem(address user, uint256 amount) public onlyOwner {        
         transferFrom(user, owner(), amount);
     }
+
+    function myBalance(address user) public view returns (uint256) {
+        return balanceOf(user);
+    }
+
 }

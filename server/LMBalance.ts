@@ -9,13 +9,13 @@ export interface Balance {
   balance?: number
 }
 
-export async function getTokenBalance(address: CryptoAddress, tokenContract: CryptoAddress): Promise<number> {
+export async function getTokenBalance(address: CryptoAddress, contractAddress: CryptoAddress): Promise<number> {
   if (typeof window !== "undefined") {
     console.error(`Running in browser bye bye 👋`);
     return -1;
   }
 
-  const contract = await loadContract(tokenContract);
+  const contract = await loadContract(contractAddress);
   const balance = await contract.balanceOf(address);
   const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
   const amount = Number.parseFloat(etherDecimals.toFixed(6));

@@ -21,15 +21,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  let tokenAddress = req.body.tokenAddress;
-  if (_.isUndefined(tokenAddress) || tokenAddress.length === 0) {
-      tokenAddress = process.env.TOKEN_CONTRACT;
+  let contractAddress = req.body.tokenAddress;
+  if (_.isUndefined(contractAddress) || contractAddress.length === 0) {
+      contractAddress = process.env.TOKEN_CONTRACT;
   }
 
   let amount;
-  if (_.isString(tokenAddress)) {
+  if (_.isString(contractAddress)) {
     // The token contract address is defined, by param or in .env.loval
-    amount = await getTokenBalance(addressParam, tokenAddress);
+    amount = await getTokenBalance(addressParam, contractAddress);
   } else {
     amount = await getTelosBalance(addressParam);
     console.log(`Telos balance amount ${amount}`);

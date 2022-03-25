@@ -6,11 +6,11 @@ import _ from 'lodash';
 
 type EthersProvider = ethers.providers.Provider;
 
-export async function loadTokenContract(): Promise<any> {  
+export async function loadTokenContract(contractAddress: CryptoAddress): Promise<any> {  
   const abi = loadAbi('KluestToken');
   // const provider = getProvider();
   const account = getAccount();
-  const tokenContract = process.env.TOKEN_CONTRACT as CryptoAddress;
+  const tokenContract = contractAddress || process.env.TOKEN_CONTRACT as CryptoAddress;
   if (!_.isString(tokenContract)){
     throw new Error("No token contract address has been defined!");
   }
@@ -35,7 +35,7 @@ export async function loadNFTContract(): Promise<any> {
 }
 
 export async function loadContract(address: CryptoAddress, abiFilename?: string): Promise<any> {
-  const abi = loadAbi(abiFilename || 'TokenERC20');
+  const abi = loadAbi(abiFilename || 'KluestToken');
   const provider = getProvider();
   const contract = new ethers.Contract(address, abi, provider);
   const name = await contract.name();

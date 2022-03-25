@@ -28,11 +28,11 @@ class LMHTTPClient {
     throw new Error("Invalid Params");
   }
 
-  static async sendAirDrop(address: CryptoAddress): Promise<AirDropResponse> {
+  static async sendAirDrop(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<AirDropResponse> {
     const endpoint = `/api/airDrop`;
     console.log(`Haciendo post a ${endpoint}`);
 
-    const response = await ky.post(endpoint, { json: { address: address } }).json() as any;
+    const response = await ky.post(endpoint, { json: { address: address, tokenAddress: tokenAddress } }).json() as any;
     const airDropResponse = (response as AirDropResponse);
     if (_.isBoolean(airDropResponse.result)) {
       return airDropResponse;

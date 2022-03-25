@@ -2,10 +2,17 @@ import { BigNumber } from 'ethers'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect } from 'react'
 import styles from '../styles/Home.module.css'
+import UIAirDrop from './UIAirdrop'
+import UIBalance from './UIBalance'
+import UIContractSelector from './UIContractSelector'
+import { useState } from 'react'
 
 
 const Home: NextPage = () => {
+
+  const [contractAddress, setContractAddress] = useState("0x110Ba5f1A7b32E1B23183662C93b4F460d87688C")
 
   return (
     <div className={styles.container}>
@@ -19,6 +26,15 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://kluest.com/">Kluest</a>
         </h1>
+        <h2>Telos EVM Test Panel</h2>
+
+        <hr/>
+        <UIContractSelector defaultContractAddress={contractAddress}
+         setContractAddress={setContractAddress}/>
+        <hr />
+        <UIBalance contractAddress={contractAddress}/>
+        <hr />
+        <UIAirDrop contractAddress={contractAddress} />
       </main>
 
       <footer className={styles.footer}>

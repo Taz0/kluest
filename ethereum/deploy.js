@@ -18,7 +18,7 @@ async function deployContract(contractName, contractArguments) {
   const factory = new ethers.ContractFactory(abi, bytecode, account);
 
   // Deploy, setting total supply to 100 tokens (assigned to the deployer)
-  await executeDeployment(factory, contractArguments);  
+  await executeDeployment(factory, contractArguments);
 }
 
 function loadAbi(contractName) {

@@ -23,14 +23,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
+  let contractAddress = req.body.tokenAddress;
+  if (_.isUndefined(contractAddress) || contractAddress.length === 0) {
+    contractAddress = process.env.TOKEN_CONTRACT;
+  }
+
   const address = addressParam as CryptoAddress;
   try {
     console.log(`Ejecutando airdrop a ${address}`);
-    await airdrop50ToUser(address);
+    await airdrop50ToUser(address, contractAddress);
     res.status(200).json({ result: true, message: 'Air Drop executed successfully' });
   } catch (ex) {
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
+    if (_.isString(exception.reason)){exception.reason
+      res.status(200).json({ result: false, message: exception.reason});
+      return;      
+    }
     let errorMessage;
     if (_.isString(resultBody)) {
       errorMessage = JSON.parse(resultBody).error.message;
