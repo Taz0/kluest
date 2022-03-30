@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { Form, Row, Button, Container } from 'react-bootstrap';
 import { ReactElement, useState } from 'react';
-import LMHTTPClient, { RewardResponse } from '../utils/httpClient/LMHTTPClient';
+import LMHTTPClient from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
 
 interface UIChestRewardProps {
@@ -12,7 +12,7 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
 
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [rewardResult, setAirDropResult] = useState("");
+  const [rewardResult, setRewardResult] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -25,16 +25,23 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
-      console.log(`contract ${props.contractAddress})`);
-      setAirDropResult("");
+      const amount = form.formAmount.value;
+
+      const amountParam = _.parseInt(amount);
+      if (!_.isNumber(amountParam) || _.isNaN(amountParam)) {
+        alert("Invalid amount");
+        return;
+      }
+
+      setRewardResult("");
       setLoading(true);
-      LMHTTPClient.sendAirDrop(address)
+      LMHTTPClient.sendChestReward(address, amountParam)
         .then((response) => {
           const result = response.result;
           console.log(`airdrop result is ${result}`);
 
           if (!_.isUndefined(response.message)) {
-            setAirDropResult(response.message);
+            setRewardResult(response.message);
           }
 
           setLoading(false);

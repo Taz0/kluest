@@ -40,14 +40,14 @@ class LMHTTPClient {
     throw new Error("Invalid Params");
   }
 
-  static async sendChestReward(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<RewardResponse> {
-    const endpoint = `/api/chestTokenReward`;
+  static async sendChestReward(address: CryptoAddress, amountMilli: number, tokenAddress?: CryptoAddress): Promise<RewardResponse> {
+    const endpoint = `/api/chestReward`;
     console.log(`Haciendo post a ${endpoint}`);
 
-    const response = await ky.post(endpoint, { json: { address: address, tokenAddress: tokenAddress } }).json() as any;
-    const airdropResponse = (response as RewardResponse);
-    if (_.isBoolean(airdropResponse.result)) {
-      return airdropResponse;
+    const response = await ky.post(endpoint, { json: { address: address, amountMilli: amountMilli, tokenAddress: tokenAddress } }).json() as any;
+    const rewardResponse = (response as RewardResponse);
+    if (_.isBoolean(rewardResponse.result)) {
+      return rewardResponse;
     }
     throw new Error("Invalid Params");
   }
