@@ -11,7 +11,7 @@ import UIChestReward from './UIChestReward';
 
 const Home: NextPage = (props) => {
 
-  const [contractAddress, setContractAddress] = useState(process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS || 'hol');
+  const [contractAddress, setContractAddress] = useState(process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS || 'no default contract found!');
 
   return (
     <div className={styles.container}>
