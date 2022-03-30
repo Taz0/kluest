@@ -1,23 +1,22 @@
-import { BigNumber } from 'ethers'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect } from 'react'
 import styles from '../styles/Home.module.css'
 import UIAirDrop from './UIAirdrop'
 import UIBalance from './UIBalance'
 import UIContractSelector from './UIContractSelector'
 import { useState } from 'react'
+import UIChestReward from './UIChestReward';
 
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
 
-  const [contractAddress, setContractAddress] = useState("0x110Ba5f1A7b32E1B23183662C93b4F460d87688C")
+  const [contractAddress, setContractAddress] = useState(process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS || 'hol');
 
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>Kluest Crypto Test Panel</title>
         <meta name="description" content="Kluest!" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -35,6 +34,8 @@ const Home: NextPage = () => {
         <UIBalance contractAddress={contractAddress}/>
         <hr />
         <UIAirDrop contractAddress={contractAddress} />
+        <hr />
+        <UIChestReward contractAddress={contractAddress} />
       </main>
 
       <footer className={styles.footer}>

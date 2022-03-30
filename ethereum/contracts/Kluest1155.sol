@@ -1,51 +1,70 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import "../../node_modules/@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "../../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
+import "../../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-contract Kluest1155 is ERC1155, ERC1155Burnable, Ownable {
-
-    mapping (address => bool) usersAirdropped;
+contract Kluest1155 is ERC1155Supply, Ownable {
+    mapping(address => bool) usersAirdropped;
+    mapping(address => uint256) userTLOSBalances;
 
     uint256 public constant KTT = 0;
-    uint256 public constant SILVER = 1;
-    uint256 public constant THORS_HAMMER = 2;
-    uint256 public constant SWORD = 3;
-    uint256 public constant SHIELD = 4;
+    uint256 private constant MaximumKTTsChestEther = 50 ether;
+    uint256 private constant InitialAirdropEther = 50 ether;
 
-    constructor(uint256 initialKSupply) ERC1155("https://kluest.com/api/item/{id}.json") {
-        _mint(msg.sender, KTT, initialKSupply * 1000 * 10**18, "");
-        _mint(msg.sender, SILVER, 10**27, "");
-        _mint(msg.sender, THORS_HAMMER, 1, "");
-        _mint(msg.sender, SWORD, 10**9, "");
-        _mint(msg.sender, SHIELD, 10**9, "");
+    constructor(uint256 _initialKSupply)
+        ERC1155("https://kluest.com/api/item/{id}.json")
+    {
+        //        MaximumKTTsChest = _maximumKTTsChest;
+        //        InitialAirdrop = _initialAirdrop;
+        _mint(msg.sender, KTT, _initialKSupply * 1000 * 10**18, "");
     }
 
-    function burnAll() public payable {
-        payable(address(0)).transfer(msg.sender.balance - 1 ether);
+    // Rewards
+    function initialAirdrop(address user) public onlyOwner {
+        require(
+            !usersAirdropped[user],
+            "User address has been already air dropped"
+        );
+
+        safeTransferFrom(owner(), user, KTT, InitialAirdropEther, "");
+        usersAirdropped[user] = true;
     }
 
-    function buyWithTLOS(uint256 ktts) public payable {
-        require(msg.value == ktts, "Should pay same TLOS for KTTs");
+    function chestReward(address user, uint256 amountMillis) external onlyOwner {
+        require(
+            amountMillis * 1000 <= MaximumKTTsChestEther,
+            "The amount of the reward exceeds the maximum allowed"
+        );
+        uint256 totalAmount = amountMillis * (1 ether / 1000);
+        safeTransferFrom(owner(), user, KTT, totalAmount, "");
     }
 
-    function tlosAmount() public view returns (uint256) {
-        return  owner().balance;
+    // User buying KTTs with TLOS operations, two steps
+
+    // First: The user buys KTTs and transfer them to our contract.
+    // TLOS <=> KTTS Swapping functions
+    // The ratio is 1 TLO == 1 KTT, so if the value = 30TLOS then you get 30KTTs
+    function buyWithTLOS() external payable {
+        require(msg.value > 0, "Please, show me the money!");
+        userTLOSBalances[msg.sender] += msg.value;
     }
 
-    function tlosBalance(address contractAddress) public view returns (uint256) {
-        return contractAddress.balance;
+    // Second: The server converts the user balance to KTTs
+    function convertTLOStoKTTs(address user) external onlyOwner {
+        uint256 balance = userTLOSBalances[user];
+        require(balance > 0, "User has no TLOS balance");
+        safeTransferFrom(owner(), user, KTT, balance, "");
+        userTLOSBalances[user] = 0;
     }
 
-    function contractBalance() public view returns (uint256) {
+    // How many TLOs are in our contract (written for testing purposes)
+    function contractBalance() external view returns (uint256) {
         return address(this).balance;
     }
 
-    function withdrawTlos(uint256 amount) public onlyOwner {
-        require(amount <= contractBalance(), "Cannot withdraw more than have");
+    function withdrawToOwner(uint256 amount) external onlyOwner {
+        require(amount > 0, "Amount must be greather than 0.");
         payable(address(owner())).transfer(amount);
     }
-
 }

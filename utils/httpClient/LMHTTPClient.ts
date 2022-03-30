@@ -8,14 +8,14 @@ interface BalanceResponse {
   amount: number;
 }
 
-export interface AirDropResponse {
+export interface RewardResponse {
   result: boolean;
   message?: string;
 }
 
 class LMHTTPClient {
 
-  static async getBalance(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<BalanceResponse> {
+  static async balance(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<BalanceResponse> {
     const endpoint = `/api/balance`;
     console.log(`Haciendo post a ${endpoint}`);
 
@@ -28,14 +28,26 @@ class LMHTTPClient {
     throw new Error("Invalid Params");
   }
 
-  static async sendAirDrop(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<AirDropResponse> {
-    const endpoint = `/api/airDrop`;
+  static async sendAirDrop(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<RewardResponse> {
+    const endpoint = `/api/initialAirdrop`;
     console.log(`Haciendo post a ${endpoint}`);
 
     const response = await ky.post(endpoint, { json: { address: address, tokenAddress: tokenAddress } }).json() as any;
-    const airDropResponse = (response as AirDropResponse);
-    if (_.isBoolean(airDropResponse.result)) {
-      return airDropResponse;
+    const airdropResponse = (response as RewardResponse);
+    if (_.isBoolean(airdropResponse.result)) {
+      return airdropResponse;
+    }
+    throw new Error("Invalid Params");
+  }
+
+  static async sendChestReward(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<RewardResponse> {
+    const endpoint = `/api/chestTokenReward`;
+    console.log(`Haciendo post a ${endpoint}`);
+
+    const response = await ky.post(endpoint, { json: { address: address, tokenAddress: tokenAddress } }).json() as any;
+    const airdropResponse = (response as RewardResponse);
+    if (_.isBoolean(airdropResponse.result)) {
+      return airdropResponse;
     }
     throw new Error("Invalid Params");
   }

@@ -4,20 +4,15 @@ import { ReactElement, useState } from 'react';
 import LMHTTPClient, { RewardResponse } from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
 
-interface UIAirDropProps {
+interface UIChestRewardProps {
   contractAddress: string;
 }
 
-const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
+const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
 
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [airdropResult, setAirdropResult] = useState("");
-
-  const errorInRequest = (error: string) => { 
-    setLoading(false);
-    setAirdropResult("Error in request: ${error}");
-  };
+  const [rewardResult, setAirDropResult] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -31,7 +26,7 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
       console.log(`contract ${props.contractAddress})`);
-      setAirdropResult("");
+      setAirDropResult("");
       setLoading(true);
       LMHTTPClient.sendAirDrop(address)
         .then((response) => {
@@ -39,13 +34,12 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
           console.log(`airdrop result is ${result}`);
 
           if (!_.isUndefined(response.message)) {
-            setAirdropResult(response.message);
+            setAirDropResult(response.message);
           }
 
           setLoading(false);
         }).catch((error) => {
           console.error(error);
-          errorInRequest(error.message || 'unknown error');
         });
     }
     setValidated(true);
@@ -53,19 +47,25 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
 
   return (
     <Container>
-      <h4>Initial airdrop:</h4>
+      <h4>Chest reward:</h4>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group className="mb-3" controlId="formWalletAddress">
-            <Form.Label>Wallet address</Form.Label>
+            <Form.Label>User address</Form.Label>
             <Form.Control required type="text" placeholder="0x123456789..." defaultValue="0xF0deCE36Aa5D5702e1a1d6986854774011095EA0" />
             <Form.Text className="text-muted">
               We&apos;ll never share your wallet with anyone else.
             </Form.Text>
           </Form.Group>
         </Row>
+        <Row className="mb-3">
+          <Form.Group className="mb-3" controlId="formAmount">
+            <Form.Label>Amount in millis (1000 is equal to 1 token)</Form.Label>
+            <Form.Control required type="number" placeholder="1000" defaultValue="0xF0deCE36Aa5D5702e1a1d6986854774011095EA0" />
+          </Form.Group>
+        </Row>
         <Button variant="primary" disabled={isLoading} type="submit">
-          {isLoading ? 'Loading...' : 'Execute air drop'}
+          {isLoading ? 'Loading...' : 'Give reward'}
         </Button>
         {showResult()}
       </Form>
@@ -73,13 +73,13 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
   );
 
   function showResult(): ReactElement | undefined {
-    if (airdropResult.length === 0 || isLoading) {
+    if (rewardResult.length === 0 || isLoading) {
       return undefined;
     }
 
-    return (<span className="m-3">Airdrop done, result: ${airdropResult}</span>);
+    return (<span className="m-3">Reward done, result: ${rewardResult}</span>);
   }
 
 };
 
-export default UIAirDrop;
+export default UIChestReward;

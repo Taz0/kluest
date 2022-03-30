@@ -22,7 +22,7 @@ const UIBalance: NextPage<UIBalanceProps> = (props) => {
       const address = form.formWalletAddress.value;
       setBalance(-1);
       setLoading(true);
-      LMHTTPClient.getBalance(address, props.contractAddress)
+      LMHTTPClient.balance(address, props.contractAddress)
         .then((response) => {
           const amount = response.amount as number;
           console.log(`balance is ${amount}`);
@@ -42,7 +42,7 @@ const UIBalance: NextPage<UIBalanceProps> = (props) => {
         <Row className="mb-3">
           <Form.Group className="mb-3" controlId="formWalletAddress">
             <Form.Label>Wallet address</Form.Label>
-            <Form.Control required type="text" placeholder="0x123456789..." defaultValue="0xD8Ff420622449bfFa9C1284004a5D50b7b2e637F" />
+            <Form.Control required type="text" placeholder="0x123456789..." defaultValue="0xF0deCE36Aa5D5702e1a1d6986854774011095EA0" />
             <Form.Text className="text-muted">
               We&apos;ll never share your wallet with anyone else.
             </Form.Text>

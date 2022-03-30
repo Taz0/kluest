@@ -3,6 +3,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const dotenv = require("dotenv");
 const dotenvPath = path.resolve(__dirname, ".env.development.local");
+//const dotenvPath = path.resolve(__dirname, ".env.production.local");
 dotenv.config({ path: dotenvPath });
 
 const buildFolder = path.resolve(process.cwd(), "ethereum", "build");

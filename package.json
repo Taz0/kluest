@@ -10,8 +10,8 @@
     "compile": "node ethereum/compile.js",
     "deploy": "node ethereum/deploy.js",
     "test": "mocha",
-    "compileToken": "solc --overwrite --abi --bin ethereum/contracts/TokenERC20.sol -o ethereum/build",
-    "deployToken": "npm run deploy TokenERC20 LightMancito LMT 1000",
+    "compileToken": "solc --overwrite --abi --bin ethereum/contracts/Kluest1155.sol -o ethereum/build",
+    "deployToken": "npm run deploy Kluest1155 1",
     "compileAndDeployToken": "npm run compileToken && npm run deployToken"
   },
   "dependencies": {

@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { CryptoAddress } from '../../shared/SharedTypes';
-import { airdrop50ToUser } from '../../server/LMUserCases'
+import { chestReward } from '../../server/LMUserCases'
 
 type ResponseType = object;
 
@@ -23,19 +23,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
+  const amountParam = _.parseInt(req.body.amountMilli);
+  if (!_.isNumber(amountParam) || _.isNaN(amountParam)) {
+    console.error(`No param amount found in body`);
+    const response = { json: { result: 'Invalid params' } };
+    res.status(401).json(response);
+    return;
+  }
+
   let contractAddress = req.body.tokenAddress;
   if (_.isUndefined(contractAddress) || contractAddress.length === 0) {
-    contractAddress = process.env.TOKEN_CONTRACT;
+    contractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
   }
 
   const address = addressParam as CryptoAddress;
   try {
-    console.log(`Ejecutando airdrop a ${address}`);
-    await airdrop50ToUser(address, contractAddress);
-    res.status(200).json({ result: true, message: 'Air Drop executed successfully' });
+    await chestReward(address,  amountParam, contractAddress);
+    res.status(200).json({ result: true, message: 'Reward given successfully' });
   } catch (ex) {
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
+    console.error(`initial airdrop failed: ${resultBody}`);
     if (_.isString(exception.reason)){exception.reason
       res.status(200).json({ result: false, message: exception.reason});
       return;      

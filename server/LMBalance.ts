@@ -9,6 +9,10 @@ export interface Balance {
   balance?: number
 }
 
+enum NFT_IDs{
+  KTT = 0
+}
+
 export async function getTokenBalance(address: CryptoAddress, contractAddress: CryptoAddress): Promise<number> {
   if (typeof window !== "undefined") {
     console.error(`Running in browser bye bye 👋`);
@@ -16,7 +20,7 @@ export async function getTokenBalance(address: CryptoAddress, contractAddress: C
   }
 
   const contract = await loadContract(contractAddress);
-  const balance = await contract.balanceOf(address);
+  const balance = await contract.balanceOf(address, NFT_IDs.KTT);
   const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
   const amount = Number.parseFloat(etherDecimals.toFixed(6));
 

@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { CryptoAddress } from '../../shared/SharedTypes';
-import { initialAirdrop, userBuyItem } from '../../server/LMUserCases'
+import { initialAirdrop } from '../../server/LMUserCases'
 
 type ResponseType = object;
 
@@ -13,10 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   if (req.method !== 'POST') {
     res.status(405).send({ message: 'Only POST requests allowed' })
     return
-  }    
-  
-  // Validate params
-  const addressParam = req.body.address as CryptoAddress;
+  }
+
+  const addressParam = req.body.address;
   if (!_.isString(addressParam)) {
     console.error(`No param address found in body`);
     const response = { json: { result: 'Invalid params' } };
@@ -24,31 +23,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  const itemParam = req.body.item;
-  if (!_.isString(itemParam)) {
-    console.error(`No param item found in body`);
-    const response = { json: { result: 'Invalid params' } };
-    res.status(401).json(response);
-    return;
+  let contractAddress = req.body.tokenAddress;
+  if (_.isUndefined(contractAddress) || contractAddress.length === 0) {
+    contractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
   }
 
-  const amountParam = req.body.amount;
-  if (!_.isString(amountParam)) {
-    console.error(`No param amount found in body`);
-    const response = { json: { result: 'Invalid params' } };
-    res.status(401).json(response);
-    return;
-  }
-
-
-    
+  const address = addressParam as CryptoAddress;
   try {
-    console.log(`Usuario ${addressParam} compra ${itemParam} por ${amountParam}`);
-    await userBuyItem(addressParam, itemParam, amountParam);
-    res.status(200).json({ result: true, message: 'Air Drop executed successfully' });
+    await initialAirdrop(address, contractAddress);
+    res.status(200).json({ result: true, message: 'Airdrop executed successfully' });
   } catch (ex) {
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
+    console.error(`initial airdrop failed: ${resultBody}`);
+    if (_.isString(exception.reason)){exception.reason
+      res.status(200).json({ result: false, message: exception.reason});
+      return;      
+    }
     let errorMessage;
     if (_.isString(resultBody)) {
       errorMessage = JSON.parse(resultBody).error.message;
