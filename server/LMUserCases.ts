@@ -14,8 +14,7 @@ export async function chestReward(address: CryptoAddress, amount: number, contra
   await contract.chestReward(address, amount, {gasLimit: 3000000});
 }
 
-export async function userBuyItem(address: CryptoAddress, item: string, amount: string, contractAddress: CryptoAddress) {
+export async function userBuyItem(address: CryptoAddress, item: string, contractAddress: CryptoAddress) {
   const contract = await loadTokenContract(contractAddress);
-  const amountNumber = BigNumber.from(amount);
-  await contract.userBuyItem(address, item, amountNumber, { gasLimit: 3000000 });
+  await contract.userBuyItem(address, item, { gasLimit: 3000000 });
 }
