@@ -2,11 +2,6 @@ const { ethers } = require('ethers');
 const fs = require("fs-extra");
 const path = require("path");
 const dotenv = require("dotenv");
-const dotenvPath = path.resolve(__dirname, ".env.development.local");
-//const dotenvPath = path.resolve(__dirname, ".env.production.local");
-dotenv.config({ path: dotenvPath });
-
-const buildFolder = path.resolve(process.cwd(), "ethereum", "build");
 
 async function deployContract(contractName, contractArguments) {
   const abi = loadAbi(contractName);
@@ -55,8 +50,16 @@ async function executeDeployment(factory, contractArguments) {
   return contract;
 }
 
-const argContractName = process.argv.slice(2)[0];
-const argCreationArguments = process.argv.slice(3);
+const argEnvMode = process.argv.slice(2)[0];
+const argContractName = process.argv.slice(3)[0];
+const argCreationArguments = process.argv.slice(4);
 
-console.log(`Deploying ${argContractName} with ${argCreationArguments}`);
+const envFilename = argEnvMode === "prod" ? ".env.production.local" : ".env.development.local";
+
+const dotenvPath = path.resolve(__dirname, `../${envFilename}`);
+dotenv.config({ path: dotenvPath });
+
+const buildFolder = path.resolve(process.cwd(), "ethereum", "build");
+
+console.log(`Deploying in ${argEnvMode} ${argContractName} with ${argCreationArguments}`);
 deployContract(argContractName, argCreationArguments);
