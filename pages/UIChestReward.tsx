@@ -68,7 +68,7 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
         <Row className="mb-3">
           <Form.Group className="mb-3" controlId="formAmount">
             <Form.Label>Amount in millis (1000 is equal to 1 token)</Form.Label>
-            <Form.Control required type="number" placeholder="1000" defaultValue="0xF0deCE36Aa5D5702e1a1d6986854774011095EA0" />
+            <Form.Control required type="number" placeholder="1000" defaultValue="1000" />
           </Form.Group>
         </Row>
         <Button variant="primary" disabled={isLoading} type="submit">

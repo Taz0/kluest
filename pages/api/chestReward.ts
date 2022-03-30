@@ -41,10 +41,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await chestReward(address,  amountParam, contractAddress);
     res.status(200).json({ result: true, message: 'Reward given successfully' });
   } catch (ex) {
+    console.dir(ex);
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
-    console.error(`initial airdrop failed: ${resultBody}`);
-    if (_.isString(exception.reason)){exception.reason
+    console.error(`chest reward failed: ${resultBody}`);
+    if (_.isString(exception.reason)){
       res.status(200).json({ result: false, message: exception.reason});
       return;      
     }
