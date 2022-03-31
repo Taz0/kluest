@@ -31,11 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  let contractAddress = req.body.tokenAddress;
-  if (_.isUndefined(contractAddress) || contractAddress.length === 0) {
-    contractAddress = process.env.TOKEN_CONTRACT_ADDRESS;
-  }
-
+  const contractAddress = process.env.TOKEN_CONTRACT_ADDRESS!;
+  
   const address = addressParam as CryptoAddress;
   try {
     await chestReward(address,  amountParam, contractAddress);

@@ -20,20 +20,6 @@ export async function loadTokenContract(contractAddress: CryptoAddress): Promise
   return contract;
 }
 
-export async function loadNFTContract(): Promise<any> {
-  const abi = loadAbi(process.env.NFT_CONTRACT_NAME!);
-  // const provider = getProvider();
-  const account = getAccount();
-  const nftContract = process.env.NFT_CONTRACT as CryptoAddress;
-  if (!_.isString(nftContract)) {
-    throw new Error("No nft contract address has been defined!");
-  }
-  const contract = new ethers.Contract(nftContract, abi, account);
-  const name = await contract.name();
-  console.log(`Contract ${name} loaded from ${nftContract}`);
-  return contract;
-}
-
 export async function loadContract(address: CryptoAddress, abiFilename?: string): Promise<any> {
   const abi = loadAbi(abiFilename || process.env.TOKEN_CONTRACT_NAME!);
   const provider = getProvider();

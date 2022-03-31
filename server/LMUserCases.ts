@@ -11,10 +11,27 @@ export async function initialAirdrop(address: CryptoAddress, contractAddress: Cr
 export async function chestReward(address: CryptoAddress, amount: number, contractAddress: CryptoAddress) {
   const contract = await loadTokenContract(contractAddress);
   console.log(`Chest Reward of ${amount} to ${address} with contract ${contractAddress}`);
-  await contract.chestReward(address, amount, {gasLimit: 3000000});
+  await contract.chestReward(address, amount, { gasLimit: 3000000 });
 }
 
-export async function userBuyItem(address: CryptoAddress, item: string, contractAddress: CryptoAddress) {
+export async function purchaseItem(
+  address: CryptoAddress,
+  itemIdStr: string,
+  amountMilliKtts: number,
+  contractAddress: CryptoAddress
+) {
   const contract = await loadTokenContract(contractAddress);
-  await contract.userBuyItem(address, item, { gasLimit: 3000000 });
+  const itemId = BigNumber.from(itemIdStr);
+  await contract.purchaseItem(address, itemId, amountMilliKtts, { gasLimit: 3000000 });
+}
+
+export async function rewardItem(itemIdStr: string, address: CryptoAddress, contractAddress: CryptoAddress): Promise<number> {
+  if (typeof window !== "undefined") {
+    console.error(`Running in browser bye bye 👋`);
+    return -1;
+  }
+
+  const contract = await loadTokenContract(contractAddress);
+  const itemId = BigNumber.from(itemIdStr);
+  return await contract.rewardItem(itemId, address);
 }

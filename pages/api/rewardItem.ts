@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { CryptoAddress } from '../../shared/SharedTypes';
-import { initialAirdrop, userBuyItem } from '../../server/LMUserCases'
+import { rewardItem } from '../../server/LMUserCases'
 
 type ResponseType = object;
 
@@ -32,20 +32,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  const amountParam = req.body.amount;
-  if (!_.isString(amountParam)) {
-    console.error(`No param amount found in body`);
-    const response = { json: { result: 'Invalid params' } };
-    res.status(401).json(response);
-    return;
-  }
+  const contractAddress = process.env.TOKEN_CONTRACT_ADDRESS!;
 
-
-    
   try {
-    console.log(`Usuario ${addressParam} compra ${itemParam} por ${amountParam}`);
-    await userBuyItem(addressParam, itemParam, amountParam);
-    res.status(200).json({ result: true, message: 'Air Drop executed successfully' });
+    console.log(`Usuario ${addressParam} adquiere ${itemParam}`);
+    await rewardItem(addressParam, itemParam, contractAddress);
+    res.status(200).json({ result: true, message: 'Purchase executed successfully' });
   } catch (ex) {
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
