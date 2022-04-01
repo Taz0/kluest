@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "compile": "node ethereum/compile.js",
     "deploy": "node ethereum/deploy.js",
     "test": "mocha",
     "compileToken": "./compileToken.sh",

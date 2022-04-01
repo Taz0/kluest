@@ -9,7 +9,8 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  console.log(`Using mnemonic ${process.env.MNEMONIC?.substring(0, 5) || 'Unknown'}`);
   console.dir(process.env);
+  console.log(`Contract ${process.env.TOKEN_CONTRACT_ADDRESS!}`);
+  console.log(`Using mnemonic ${process.env.MNEMONIC?.substring(0, 5) || 'Unknown'}`);
   res.status(200).json({ name: 'Hello world!' })
 }
