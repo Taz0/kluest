@@ -14,7 +14,7 @@ async function deployContract(contractName, contractArguments) {
   const factory = new ethers.ContractFactory(abi, bytecode, account);
 
   // Deploy, setting total supply to 100 tokens (assigned to the deployer)
-  await executeDeployment(factory, contractArguments);
+  return await executeDeployment(factory, contractArguments);
 }
 
 function loadAbi(contractName) {
@@ -45,6 +45,7 @@ async function executeDeployment(factory, contractArguments) {
 
   process.stdout.write("Contract info: "); console.dir(contract);
   process.stdout.write("\nTransaction info: "); console.dir(deployTransaction);
+
   console.log("\n\n-- Contract deployed to", contract.address, "--");
 
   return contract;
