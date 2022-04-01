@@ -30,6 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await initialAirdrop(address, contractAddress);
     res.status(200).json({ result: true, message: 'Airdrop executed successfully' });
   } catch (ex) {
+    console.dir(ex);
     const exception = ex as any;
     const resultBody = exception?.error?.error?.body;
     console.error(`initial airdrop failed: ${resultBody}`);

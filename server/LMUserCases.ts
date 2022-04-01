@@ -42,3 +42,9 @@ export async function convertTLOStoKTTs(address: CryptoAddress, contractAddress:
   await contract.convertTLOStoKTTs(address, { gasLimit: 3000000 });
 }
 
+export async function userItems(address: CryptoAddress, contractAddress: CryptoAddress): Promise<string[]> {
+  const contract = await loadTokenContract(contractAddress);
+  console.log(`Getting user items from user ${address} with contract ${contractAddress}`);
+  const items = await contract.userItems(address, { gasLimit: 3000000 });
+  return items.map((item: BigNumber) => item.toString());
+}
