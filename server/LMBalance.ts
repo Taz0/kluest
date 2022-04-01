@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { CryptoAddress } from '../shared/SharedTypes';
 import { loadContract } from './LMContract';
 import _ from 'lodash';
@@ -13,14 +13,16 @@ enum NFT_IDs{
   KTT = 0
 }
 
-export async function getTokenBalance(address: CryptoAddress, contractAddress: CryptoAddress): Promise<number> {
+export async function getTokenBalance(address: CryptoAddress, itemIdStr: string, contractAddress: CryptoAddress): Promise<number> {
   if (typeof window !== "undefined") {
     console.error(`Running in browser bye bye 👋`);
     return -1;
   }
 
   const contract = await loadContract(contractAddress);
-  const balance = await contract.balanceOf(address, NFT_IDs.KTT);
+  const itemId = BigNumber.from(itemIdStr);
+
+  const balance = await contract.balanceOf(address, itemId);
   const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
   const amount = Number.parseFloat(etherDecimals.toFixed(6));
 

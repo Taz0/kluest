@@ -10,7 +10,7 @@
     "compile": "node ethereum/compile.js",
     "deploy": "node ethereum/deploy.js",
     "test": "mocha",
-    "compileToken": "solc --overwrite --abi --bin ethereum/contracts/Kluest1155.sol -o ethereum/build",
+    "compileToken": "./compileToken.sh",
     "deployToken": "npm run deploy Kluest1155 1",
     "compileAndDeployToken": "npm run compileToken && npm run deployToken"
   },
