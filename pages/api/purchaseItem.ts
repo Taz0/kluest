@@ -32,8 +32,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  const amountParam = _.parseInt(req.body.amount);
-  if (!_.isNumber(amountParam) || _.isNaN(amountParam)) {
+  const amountMilliKtts = _.parseInt(req.body.amountMilliKtts);
+  if (!_.isNumber(amountMilliKtts) || _.isNaN(amountMilliKtts)) {
     console.error(`No param number found or not valid in body`);
     const response = { json: { result: 'Invalid params' } };
     res.status(401).json(response);
@@ -43,8 +43,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const contractAddress = process.env.TOKEN_CONTRACT_ADDRESS!;
 
   try {
-    console.log(`Usuario ${addressParam} compra ${itemParam} por ${amountParam}`);
-    await purchaseItem(addressParam, itemParam, amountParam, contractAddress);
+    console.log(`Usuario ${addressParam} compra ${itemParam} por ${amountMilliKtts}`);
+    await purchaseItem(addressParam, itemParam, amountMilliKtts, contractAddress);
     res.status(200).json({ result: true, message: 'Purchase executed successfully' });
   } catch (ex) {
     const exception = ex as any;

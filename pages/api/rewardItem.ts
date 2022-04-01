@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   try {
     console.log(`Usuario ${addressParam} adquiere ${itemParam}`);
-    await rewardItem(addressParam, itemParam, contractAddress);
+    await rewardItem(itemParam, addressParam, contractAddress);
     res.status(200).json({ result: true, message: 'Purchase executed successfully' });
   } catch (ex) {
     const exception = ex as any;
