@@ -13,8 +13,9 @@
     "compileTsc2": "ts-node ethereum/testType.ts",
     "deploy": "node ethereum/deploy.js",
     "compileToken": "./compileToken.sh",
-    "deployToken": "npm run deploy Kluest1155 1",
-    "compileAndDeployToken": "npm run compileToken && npm run deployToken"
+    "deployProd": "npm run deploy prod Kluest1155 1",
+    "deployDev": "npm run deploy dev Kluest1155 1",
+    "compileAndDeployProd": "npm run compileToken && npm run deployProd"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",

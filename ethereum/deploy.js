@@ -46,6 +46,8 @@ async function executeDeployment(factory, contractArguments) {
   process.stdout.write("Contract info: "); console.dir(contract);
   process.stdout.write("\nTransaction info: "); console.dir(deployTransaction);
 
+  console.log("\n\n-- Contract deployed to", contract.address, "--");
+
   return contract;
 }
 
@@ -61,5 +63,4 @@ dotenv.config({ path: dotenvPath });
 const buildFolder = path.resolve(process.cwd(), "ethereum", "build");
 
 console.log(`Deploying in ${argEnvMode} ${argContractName} with ${argCreationArguments}`);
-const contract = await deployContract(argContractName, argCreationArguments);
-console.log("\n\n-- Contract deployed to", contract.address, "--");
+deployContract(argContractName, argCreationArguments);
