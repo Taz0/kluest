@@ -36,10 +36,10 @@ export async function rewardItem(itemIdStr: string, address: CryptoAddress, cont
   return await contract.rewardItem(itemId, address);
 }
 
-export async function convertTLOStoKTTs(address: CryptoAddress, contractAddress: CryptoAddress) {
+export async function convertTLOStoKTTs(address: CryptoAddress, contractAddress: CryptoAddress): Promise<BigNumber> {
   const contract = await loadTokenContract(contractAddress);
   console.log(`Converting TLOS to KTTs of ${address} with contract ${contractAddress}`);
-  await contract.convertTLOStoKTTs(address, { gasLimit: 3000000 });
+  return await contract.convertTLOStoKTTs(address, { gasLimit: 3000000 });
 }
 
 export async function userItems(address: CryptoAddress, contractAddress: CryptoAddress): Promise<string[]> {

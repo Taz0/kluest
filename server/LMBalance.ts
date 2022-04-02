@@ -22,8 +22,8 @@ export async function getTokenBalance(address: CryptoAddress, itemIdStr: string,
   const contract = await loadContract(contractAddress);
   const balance = await contract.balanceOf(address, itemIdStr);
   if (itemIdStr === "0") {
-    const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
-    return Number.parseFloat(etherDecimals.toFixed(6));
+    const balanceWeis = Number.parseFloat(ethers.utils.formatEther(balance));
+    return Number.parseFloat(balanceWeis.toFixed(6));
   } else {
     return balance.toNumber();
   }

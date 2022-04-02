@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import _ from 'lodash';
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { CryptoAddress } from '../../shared/SharedTypes';
-import { convertTLOStoKTTs } from '../../server/LMUserCases'
+import { convertTLOStoKTTs } from '../../server/LMUserCases';
 
 type ResponseType = object;
 
@@ -11,8 +11,8 @@ type ResponseType = object;
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
 
   if (req.method !== 'POST') {
-    res.status(405).send({ message: 'Only POST requests allowed' })
-    return
+    res.status(405).send({ message: 'Only POST requests allowed' });
+    return;
   }
 
   const addressParam = req.body.address;
@@ -27,8 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const address = addressParam as CryptoAddress;
   try {
-    await convertTLOStoKTTs(address, contractAddress);
-    res.status(200).json({ result: true, message: 'Converted TLOs to KTTs successfully' });
+    const amount = await convertTLOStoKTTs(address, contractAddress);
+    res.status(200).json({ result: true, message: 'Converted TLOs to KTTs successfully', amount: amount });
   } catch (ex) {
     console.dir(ex);
     const exception = ex as any;

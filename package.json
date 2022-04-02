@@ -15,7 +15,8 @@
     "compileToken": "./compileToken.sh",
     "deployProd": "npm run deploy prod Kluest1155 1000",
     "deployDev": "npm run deploy dev Kluest1155 1000",
-    "compileAndDeployProd": "npm run compileToken && npm run deployProd"
+    "compileAndDeployProd": "npm run compileToken && npm run deployProd",
+    "compileAndDeployDev": "npm run compileToken && npm run deployDev"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",

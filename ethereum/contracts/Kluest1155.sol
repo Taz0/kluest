@@ -51,19 +51,30 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
 
     // TLOS <=> KTTS Swapping functions: Two stepa
     // First step: The user buys KTTs and transfer them to the contract.
-    function purchaseKTTsWithTLOS(uint32 amountMilliTlos, uint32 amountMilliKTTs) external payable {        
+    function purchaseKTTsWithTLOS(
+        uint32 amountMilliTlos,
+        uint32 amountMilliKTTs
+    ) external payable {
         require(msg.value > 0, "Please, show me the money!");
-        require(msg.value == uint256(amountMilliTlos) * (1 ether / 1000), "Please send the correct amount of TLOS");
+        require(
+            msg.value == uint256(amountMilliTlos) * (1 ether / 1000),
+            "Please send the correct amount of TLOS"
+        );
         require(amountMilliKTTs > 0, "Please, add some KTTs");
-        userTLOSBalances[_msgSender()] += msg.value;
+        userTLOSBalances[_msgSender()] += uint256(amountMilliTlos) * (1 ether / 1000);
     }
 
     // Second step: The server converts the user balance to KTTs
-    function convertTLOStoKTTs(address user) external onlyOwner {
+    function convertTLOStoKTTs(address user)
+        external
+        onlyOwner
+        returns (uint256)
+    {
         uint256 balance = userTLOSBalances[user];
         require(balance > 0, "User has no TLOS balance");
         safeTransferFrom(owner(), user, KTT, balance, "");
         userTLOSBalances[user] = 0;
+        return balance;
     }
 
     // How many TLOs are in the contract (written for testing purposes)
@@ -79,17 +90,21 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
 
     ///---------------------------------------------------------------
     // NFTs or items operations
-    function purchaseItem(address user, uint256 id, uint32 amountMilliKtts) public onlyOwner {
+    function purchaseItem(
+        address user,
+        uint256 id,
+        uint32 amountMilliKtts
+    ) public onlyOwner {
         uint256 ktts = uint256(amountMilliKtts) * (1 ether / 1000);
         require(balanceOf(user, KTT) >= ktts, "Not enough balance");
         _safeTransferFrom(user, owner(), 0, ktts, "");
 
-        if (id != 0) {
+        if (id == 0) {
             // The user is purchasing an item but we don't handle it as NFT
             // So we got the KTTs and that's it.
-            return; 
+            return;
         }
-        
+
         // Mint the item
         _mint(user, id, 1, "");
         // Add the item to the user's list
@@ -107,7 +122,12 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
         items.push(id);
     }
 
-    function userItems(address user) external view onlyOwner returns (uint256[] memory) {
+    function userItems(address user)
+        external
+        view
+        onlyOwner
+        returns (uint256[] memory)
+    {
         return itemsListByUser[user];
     }
 
@@ -115,5 +135,4 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
     //     uint256[] storage items = itemsListByUser[user];
     //     items.remove(id);
     // }
-
 }
