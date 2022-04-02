@@ -13,8 +13,8 @@
     "compileTsc2": "ts-node ethereum/testType.ts",
     "deploy": "node ethereum/deploy.js",
     "compileToken": "./compileToken.sh",
-    "deployProd": "npm run deploy prod Kluest1155 1",
-    "deployDev": "npm run deploy dev Kluest1155 1",
+    "deployProd": "npm run deploy prod Kluest1155 1000",
+    "deployDev": "npm run deploy dev Kluest1155 1000",
     "compileAndDeployProd": "npm run compileToken && npm run deployProd"
   },
   "dependencies": {
