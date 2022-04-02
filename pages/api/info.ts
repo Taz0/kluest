@@ -12,12 +12,12 @@ export default function handler(
   res: NextApiResponse<Data>
 ) {
   console.dir(process.env);
-  console.log(`Contract ${process.env.TOKEN_CONTRACT_ADDRESS!}`);
+  console.log(`Contract ${process.env.TOKEN_CONTRACT_ADDRESS || 'Unknown'}`);
   console.log(`Using mnemonic ${process.env.MNEMONIC?.substring(0, 5) || 'Unknown'}`);
   res.status(200).json(
     { 
       result: true,
-      contract: 'process.env.TOKEN_CONTRACT_ADDRESS',
+      contract: process.env.TOKEN_CONTRACT_ADDRESS || 'Unknown',
       key: process.env.MNEMONIC?.substring(0, 5) || 'Unknown'
   })
 }
