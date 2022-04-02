@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import _ from 'lodash';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getTelosBalance, getTokenBalance } from '../../server/LMBalance'
+import { getTokenBalance } from '../../server/LMBalance'
 
 type ResponseType = object;
 
@@ -21,9 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
+  const itemParam = _.isString(req.body.item) ? req.body.item : "0";
+
   const contractAddress = process.env.TOKEN_CONTRACT_ADDRESS!;
 
-  const amount = await getTokenBalance(addressParam, contractAddress);
+  const amount = await getTokenBalance(addressParam, itemParam, contractAddress);
 
   // if (_.isString(contractAddress)) {
   //   // The token contract address is defined, by param or in .env.loval

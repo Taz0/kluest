@@ -10,14 +10,14 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
     mapping(address => uint256) userTLOSBalances;
 
     // Mapping from token ID to account balances
-    mapping(address => uint256[]) public itemsListByUser;
+    mapping(address => uint256[]) itemsListByUser;
 
     uint256 public constant KTT = 0;
     uint16 private constant MaximumMilliKTTsChest = 50000; // 50 KTTs
     uint256 private constant InitialAirdropEther = 50 ether;
 
     constructor(uint256 _initialKSupply)
-        ERC1155("https://kluest.com/api/item/{id}.json")
+        ERC1155("https://kluest.com/pics/{id}.jpg")
     {
         //        MaximumKTTsChest = _maximumKTTsChest;
         //        InitialAirdrop = _initialAirdrop;
