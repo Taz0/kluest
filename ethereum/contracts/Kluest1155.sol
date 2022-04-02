@@ -80,14 +80,18 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
     ///---------------------------------------------------------------
     // NFTs or items operations
     function purchaseItem(address user, uint256 id, uint32 amountMilliKtts) public onlyOwner {
-        require(id != 0, "Cannot purchase KTTs");
         uint256 ktts = uint256(amountMilliKtts) * (1 ether / 1000);
         require(balanceOf(user, KTT) >= ktts, "Not enough balance");
-
         _safeTransferFrom(user, owner(), 0, ktts, "");
 
-        _mint(user, id, 1, "");
+        if (id != 0) {
+            // The user is purchasing an item but we don't handle it as NFT
+            // So we got the KTTs and that's it.
+            return; 
+        }
         
+        // Mint the item
+        _mint(user, id, 1, "");
         // Add the item to the user's list
         uint256[] storage items = itemsListByUser[user];
         items.push(id);
