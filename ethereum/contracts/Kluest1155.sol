@@ -61,7 +61,7 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
             "Please send the correct amount of TLOS"
         );
         require(amountMilliKTTs > 0, "Please, add some KTTs");
-        userTLOSBalances[_msgSender()] += uint256(amountMilliTlos) * (1 ether / 1000);
+        userTLOSBalances[_msgSender()] += uint256(amountMilliKTTs) * (1 ether / 1000);
     }
 
     // Second step: The server converts the user balance to KTTs
