@@ -32,16 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (ex) {
     console.dir(ex);
     const exception = ex as any;
-    const resultBody = exception?.error?.error?.body;
-    console.error(`Convertion TLOs to KTTs failed: ${resultBody}`);
-    if (_.isString(exception.reason)){exception.reason
-      res.status(200).json({ result: false, message: exception.reason});
-      return;      
-    }
-    let errorMessage;
-    if (_.isString(resultBody)) {
-      errorMessage = JSON.parse(resultBody).error.message;
-    }
-    res.status(200).json({ result: false, message: errorMessage || 'Unknown error' });
+    const errorMessage = exception?.error?.message;
+    res.status(401).json({ result: false, message: errorMessage || 'Unknown error' });
   }
 }

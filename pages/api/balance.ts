@@ -35,5 +35,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   //   console.log(`Telos balance amount ${amount}`);
   // }
 
-  res.status(200).json({ result: { amount: amount } });
+  res.status(200).json({ result: { amount: amount, item: itemParam } });
 }

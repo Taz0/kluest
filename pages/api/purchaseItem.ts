@@ -49,11 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (ex) {
     console.dir(ex);
     const exception = ex as any;
-    const resultBody = exception?.error?.error?.body;
-    let errorMessage;
-    if (_.isString(resultBody)) {
-      errorMessage = JSON.parse(resultBody).error.message;
-    }
-    res.status(200).json({ result: false, message: errorMessage || 'Unknown error' });
+    const errorMessage = exception?.error?.message;
+    res.status(401).json({ result: false, message: errorMessage || 'Unknown error' });
   }
 }

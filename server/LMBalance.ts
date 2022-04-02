@@ -20,13 +20,13 @@ export async function getTokenBalance(address: CryptoAddress, itemIdStr: string,
   }
 
   const contract = await loadContract(contractAddress);
-  const itemId = BigNumber.from(itemIdStr);
-
-  const balance = await contract.balanceOf(address, itemId);
-  const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
-  const amount = Number.parseFloat(etherDecimals.toFixed(6));
-
-  return amount;
+  const balance = await contract.balanceOf(address, itemIdStr);
+  if (itemIdStr === "0") {
+    const etherDecimals = Number.parseFloat(ethers.utils.formatEther(balance));
+    return Number.parseFloat(etherDecimals.toFixed(6));
+  } else {
+    return balance.toNumber();
+  }
 }
 
 export async function getTelosBalance(address: CryptoAddress): Promise<number> {
