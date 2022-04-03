@@ -7,11 +7,11 @@ export async function balanceOf(address: CryptoAddress, itemIdStr: string, contr
   const contract = await loadTokenContract(contractAddress);
   console.log(`Getting balance of ${address} of itemId ${itemIdStr} with contract ${contractAddress}`);
   if (itemIdStr === "0") {
-    const balance = await contract.balanceOfKTTs(address);
+    const balance = await contract["balanceOf(address)"](address);
     const balanceWeis = Number.parseFloat(ethers.utils.formatEther(balance));
     return Number.parseFloat(balanceWeis.toFixed(6));
   } else {
-    const balance = await contract.balanceOf(address, itemIdStr);
+    const balance = await contract["balanceOf(address,uint256)"](address, itemIdStr);
     return balance.toNumber();
   }
 }

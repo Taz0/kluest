@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
 
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-contract Kluest1155 is Context, Ownable, ERC1155Supply {
+contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20Metadata {
     mapping(address => bool) usersAirdropped;
     mapping(address => uint256) userTLOSBalances;
 
@@ -113,37 +113,37 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
     //---------------------------------------------------------------
     // IERC20 implementation
     //---------------------------------------------------------------
-    function name() external pure returns (string memory) {
+    function name() external pure override returns (string memory) {
         return "Kluest";
     }
 
-    function symbol() external pure returns (string memory) {
+    function symbol() external pure virtual override returns (string memory) {
         return "KTT";
     }
 
-    function decimals() external pure returns (uint8) {
+    function decimals() external pure virtual override returns (uint8) {
         return 18;
     }
 
     // ERC1155Supply already implements this function
-    function totalSupply() public view returns (uint256) {
+    function totalSupply() public view override returns (uint256) {
         return totalSupply(KTT);
     }
 
-    function balanceOfKTTs(address account) public view returns (uint256) {
+    function balanceOf(address account) public view override returns (uint256) {
         return balanceOf(account, KTT);
     }
 
-    function transfer(address to, uint256 amount) public returns (bool) {
+    function transfer(address to, uint256 amount) public override returns (bool) {
         safeTransferFrom(_msgSender(), to, KTT, amount, "");
         return true;
     }
 
-    function allowance(address, address) external pure returns (uint256) {
+    function allowance(address, address) external pure override returns (uint256) {
         return 0;
     }
 
-    function approve(address, uint256) external pure returns (bool) {
+    function approve(address, uint256) external pure override returns (bool) {
         return false;
     }
 
@@ -151,7 +151,7 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply {
         address from,
         address to,
         uint256 amount
-    ) public returns (bool) {
+    ) public override returns (bool) {
         safeTransferFrom(from, to, KTT, amount, "");
         return true;
     }
