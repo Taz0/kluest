@@ -37,7 +37,7 @@ function getProvider(): EthersProvider {
 }
 
 function loadAbi(filename: string): any {
-  const buildFolder = path.resolve(process.cwd(), "bin", "ethereum", "src");
+  const buildFolder = path.resolve(process.cwd(), "public");
   const abiPath = path.resolve(buildFolder, filename + ".abi");
   return fs.readJsonSync(abiPath);
 }

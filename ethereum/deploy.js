@@ -60,7 +60,7 @@ const envFilename = argEnvMode === "prod" ? ".env.production.local" : ".env.deve
 const dotenvPath = path.resolve(__dirname, `../${envFilename}`);
 dotenv.config({ path: dotenvPath });
 
-const buildFolder = path.resolve(process.cwd(), "bin", "ethereum", "src");
+const buildFolder = path.resolve(process.cwd(), "public");
 
 console.log(`Deploying in ${argEnvMode} ${argContractName} with ${argCreationArguments}`);
 deployContract(argContractName, argCreationArguments);
