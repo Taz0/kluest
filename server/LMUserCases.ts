@@ -1,6 +1,20 @@
 import { BigNumber } from 'ethers';
 import { CryptoAddress } from '../shared/SharedTypes';
 import { loadTokenContract } from './LMContract';
+import { ethers } from 'ethers';
+
+export async function balanceOf(address: CryptoAddress, itemIdStr: string, contractAddress: CryptoAddress): Promise<number> {
+  const contract = await loadTokenContract(contractAddress);
+  console.log(`Getting balance of ${address} of itemId ${itemIdStr} with contract ${contractAddress}`);
+  if (itemIdStr === "0") {
+    const balance = await contract.balanceOfKTTs(address);
+    const balanceWeis = Number.parseFloat(ethers.utils.formatEther(balance));
+    return Number.parseFloat(balanceWeis.toFixed(6));
+  } else {
+    const balance = await contract.balanceOf(address, itemIdStr);
+    return balance.toNumber();
+  }
+}
 
 export async function initialAirdrop(address: CryptoAddress, contractAddress: CryptoAddress) {
   const contract = await loadTokenContract(contractAddress);
