@@ -14,7 +14,7 @@ FROM node:16-alpine AS deps
 # if these dependency files change. Nice speed hack!
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci 
+RUN npm ci
 
 # END DEPS IMAGE
 
@@ -57,14 +57,14 @@ COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/public ./public
 COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.next ./.next
 
 # 4. OPTIONALLY the next.config.js, if your app has one
-COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/next.config.js  ./
+COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/next.config.js ./
 
 # 5. Copy prod file to .env.local files
-COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.env.prod  ./.env.local
+COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/.env.prod ./.env.local
 
 # 5. Ethereum abi contracts
 RUN mkdir -p ethereum/build
-COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/ethereum/build/*.abi  ./ethereum/build
+COPY --from=BUILD_IMAGE --chown=nextjs:nodejs /app/bin/ethereum/src/*.abi ./ethereum/build
 
 USER nextjs
 

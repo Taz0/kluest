@@ -51,16 +51,20 @@ async function executeDeployment(factory, contractArguments) {
   return contract;
 }
 
+// Load command arguments: npm run deploy dev|prod contractName contractArguments
 const argEnvMode = process.argv.slice(2)[0];
 const argContractName = process.argv.slice(3)[0];
 const argCreationArguments = process.argv.slice(4);
 
 const envFilename = argEnvMode === "prod" ? ".env.production.local" : ".env.development.local";
-
 const dotenvPath = path.resolve(__dirname, `../${envFilename}`);
 dotenv.config({ path: dotenvPath });
 
-const buildFolder = path.resolve(process.cwd(), "ethereum", "build");
+const buildFolder = path.resolve(process.cwd(), "bin", "ethereum", "src");
 
 console.log(`Deploying in ${argEnvMode} ${argContractName} with ${argCreationArguments}`);
 deployContract(argContractName, argCreationArguments);
+
+console.log(`Copying abi ${argContractName}.abi to public folder`);
+const publicFolder = path.resolve(process.cwd(), "public");
+fs.copyFileSync(path.resolve(buildFolder, argContractName + ".abi"), path.resolve(publicFolder, argContractName + ".abi"));

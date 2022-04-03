@@ -1,12 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import "../../node_modules/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
-import "../../node_modules/@openzeppelin/contracts/access/Ownable.sol";
-import "../../node_modules/@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Context.sol";
 
-import "../../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../../node_modules/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
     mapping(address => bool) usersAirdropped;
@@ -19,9 +21,7 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
     uint16 private constant MaximumMilliKTTsChest = 50000; // 50 KTTs
     uint256 private constant InitialAirdropEther = 50 ether;
 
-    constructor(uint256 _initialKSupply)
-        ERC1155("https://kluest.com/pics/{id}.jpg")
-    {
+    constructor(uint256 _initialKSupply) ERC1155("https://kluest.com/pics/{id}.jpg") {
         //        MaximumKTTsChest = _maximumKTTsChest;
         //        InitialAirdrop = _initialAirdrop;
         _mint(_msgSender(), KTT, _initialKSupply * (1000 ether), "");
@@ -30,10 +30,7 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
     ///---------------------------------------------------------------
     // Rewards
     function initialAirdrop(address user) public onlyOwner {
-        require(
-            !usersAirdropped[user],
-            "User address has been already air dropped"
-        );
+        require(!usersAirdropped[user], "User address has been already air dropped");
 
         safeTransferFrom(owner(), user, KTT, InitialAirdropEther, "");
         usersAirdropped[user] = true;
@@ -41,10 +38,7 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
 
     // The user opens a chest and gets KTTS as a reward
     function chestReward(address user, uint16 amountMillis) external onlyOwner {
-        require(
-            amountMillis <= MaximumMilliKTTsChest,
-            "The amount of the reward exceeds the maximum allowed"
-        );
+        require(amountMillis <= MaximumMilliKTTsChest, "The amount of the reward exceeds the maximum allowed");
         uint256 totalAmount = uint256(amountMillis) * (1 ether / 1000);
         safeTransferFrom(owner(), user, KTT, totalAmount, "");
     }
@@ -54,27 +48,15 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
 
     // TLOS <=> KTTS Swapping functions: Two stepa
     // First step: The user buys KTTs and transfer them to the contract.
-    function purchaseKTTsWithTLOS(
-        uint32 amountMilliTlos,
-        uint32 amountMilliKTTs
-    ) external payable {
+    function purchaseKTTsWithTLOS(uint32 amountMilliTlos, uint32 amountMilliKTTs) external payable {
         require(msg.value > 0, "Please, show me the money!");
-        require(
-            msg.value == uint256(amountMilliTlos) * (1 ether / 1000),
-            "Please send the correct amount of TLOS"
-        );
+        require(msg.value == uint256(amountMilliTlos) * (1 ether / 1000), "Please send the correct amount of TLOS");
         require(amountMilliKTTs > 0, "Please, add some KTTs");
-        userTLOSBalances[_msgSender()] +=
-            uint256(amountMilliKTTs) *
-            (1 ether / 1000);
+        userTLOSBalances[_msgSender()] += uint256(amountMilliKTTs) * (1 ether / 1000);
     }
 
     // Second step: The server converts the user balance to KTTs
-    function convertTLOStoKTTs(address user)
-        external
-        onlyOwner
-        returns (uint256)
-    {
+    function convertTLOStoKTTs(address user) external onlyOwner returns (uint256) {
         uint256 balance = userTLOSBalances[user];
         require(balance > 0, "User has no TLOS balance");
         safeTransferFrom(owner(), user, KTT, balance, "");
@@ -127,69 +109,45 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
         items.push(id);
     }
 
-    function userItems(address user)
-        external
-        view
-        onlyOwner
-        returns (uint256[] memory)
-    {
+    function userItems(address user) external view onlyOwner returns (uint256[] memory) {
         return itemsListByUser[user];
     }
-
-    // function removeItemFromUser(address user, uint256 id) external onlyOwner {
-    //     uint256[] storage items = itemsListByUser[user];
-    //     items.remove(id);
-    // }
 
     //---------------------------------------------------------------
     // IERC20 implementation
     //---------------------------------------------------------------
-
-    function name() public view virtual override returns (string memory) {
+    function name() external pure override returns (string memory) {
         return "Kluest";
     }
 
-    function symbol() public view virtual override returns (string memory) {
+    function symbol() external pure virtual override returns (string memory) {
         return "KTT";
     }
 
-    function decimals() public view virtual override returns (uint8) {
+    function decimals() external pure virtual override returns (uint8) {
         return 18;
     }
 
     // ERC1155Supply already implements this function
     function totalSupply() public view override returns (uint256) {
-        return totalSupply();
+        return totalSupply(KTT);
     }
 
     function balanceOf(address account) public view override returns (uint256) {
         return balanceOf(account, KTT);
     }
 
-    function transfer(address to, uint256 amount)
-        public
-        override
-        returns (bool)
-    {
+    function transfer(address to, uint256 amount) public override returns (bool) {
         safeTransferFrom(_msgSender(), to, KTT, amount, "");
         return true;
     }
 
-    function allowance(address owner, address spender)
-        external
-        view
-        override
-        returns (uint256)
-    {
+    function allowance(address, address) external pure override returns (uint256) {
         return 0;
     }
 
-    function approve(address spender, uint256 amount)
-        external
-        override
-        returns (bool)
-    {
-        return false; //setApprovalForAll(spender, true);
+    function approve(address, uint256) external pure override returns (bool) {
+        return false;
     }
 
     function transferFrom(
@@ -201,5 +159,7 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
         return true;
     }
 
-
+    //---------------------------------------------------------------
+    // IERC721 implementation
+    //---------------------------------------------------------------
 }

@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
 import { CryptoAddress } from '../shared/SharedTypes';
 import fs from "fs-extra";
 import path from "path";
@@ -6,12 +6,12 @@ import _ from 'lodash';
 
 type EthersProvider = ethers.providers.Provider;
 
-export async function loadTokenContract(contractAddress: CryptoAddress): Promise<any> {  
+export async function loadTokenContract(contractAddress: CryptoAddress): Promise<any> {
   const abi = loadAbi(process.env.TOKEN_CONTRACT_NAME!);
   // const provider = getProvider();
   const account = getAccount();
   const tokenContract = contractAddress || process.env.TOKEN_CONTRACT_ADDRESS as CryptoAddress;
-  if (!_.isString(tokenContract)){
+  if (!_.isString(tokenContract)) {
     throw new Error("No token contract address has been defined!");
   }
   const contract = new ethers.Contract(tokenContract, abi, account);
@@ -37,7 +37,7 @@ function getProvider(): EthersProvider {
 }
 
 function loadAbi(filename: string): any {
-  const buildFolder = path.resolve(process.cwd(), "ethereum", "build");
+  const buildFolder = path.resolve(process.cwd(), "bin", "ethereum", "src");
   const abiPath = path.resolve(buildFolder, filename + ".abi");
   return fs.readJsonSync(abiPath);
 }
@@ -48,7 +48,7 @@ function getAccount() {
   const mnemonic = process.env.MNEMONIC;
   if (!_.isString(mnemonic)) {
     console.error("mnemonic was not defined!");
-    throw new Error("mnemonic was not defined!")
+    throw new Error("mnemonic was not defined!");
   } else {
     console.log(`mnemonic: ${mnemonic.substring(0, 5)}...`);
   }

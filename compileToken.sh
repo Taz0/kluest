@@ -1,7 +1,7 @@
 #!/bin/zsh
 rm ethereum/build/Kluest1155.abi
 rm ethereum/build/Kluest1155.bin
-solc --overwrite --abi --bin ethereum/contracts/Kluest1155.sol -o ethereum/build
+solc --overwrite --abi --bin ethereum/src/Kluest1155.sol -o ethereum/build
 mv ethereum/build/Kluest1155.abi ethereum/build/Kluest1155.abi.nop
 mv ethereum/build/Kluest1155.bin ethereum/build/Kluest1155.bin.nop
 rm ethereum/build/*.abi
