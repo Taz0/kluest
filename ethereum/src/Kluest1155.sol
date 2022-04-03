@@ -8,8 +8,6 @@ import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-
 contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
     mapping(address => bool) usersAirdropped;
     mapping(address => uint256) userTLOSBalances;
@@ -154,12 +152,8 @@ contract Kluest1155 is Context, Ownable, ERC1155Supply, IERC20, IERC20Metadata {
         address from,
         address to,
         uint256 amount
-    ) external override returns (bool) {
+    ) public override returns (bool) {
         safeTransferFrom(from, to, KTT, amount, "");
         return true;
     }
-
-    //---------------------------------------------------------------
-    // IERC721 implementation
-    //---------------------------------------------------------------
 }

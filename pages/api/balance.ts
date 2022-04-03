@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import _ from 'lodash';
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { getTokenBalance } from '../../server/LMBalance'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getTokenBalance } from '../../server/LMBalance';
 
 type ResponseType = object;
 
@@ -9,8 +9,8 @@ type ResponseType = object;
 // PARAMS: - address: Hex address of the account
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType>) {
   if (req.method !== 'POST') {
-    res.status(405).send({ message: 'Only POST requests allowed' })
-    return
+    res.status(405).send({ message: 'Only POST requests allowed' });
+    return;
   }
 
   const addressParam = req.body.address;
@@ -27,10 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
   const amount = await getTokenBalance(addressParam, itemParam, contractAddress);
 
-  // if (_.isString(contractAddress)) {
-  //   // The token contract address is defined, by param or in .env.loval
-  //   amount = await getTokenBalance(addressParam, contractAddress);
-  // } else {
+  // if (!_.isString(contractAddress)) {
   //   amount = await getTelosBalance(addressParam);
   //   console.log(`Telos balance amount ${amount}`);
   // }
