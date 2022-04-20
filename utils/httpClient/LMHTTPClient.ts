@@ -15,11 +15,11 @@ export interface RequestResponse {
 
 class LMHTTPClient {
 
-  static async balance(address: CryptoAddress, tokenAddress?: CryptoAddress): Promise<BalanceResponse> {
+  static async balance(address: CryptoAddress, item: string, tokenAddress?: CryptoAddress): Promise<BalanceResponse> {
     const endpoint = `/api/balance`;
     console.log(`Haciendo post a ${endpoint}`);
 
-    const response = await ky.post(endpoint, { json: { address: address, tokenAddress: tokenAddress } }).json() as any;
+    const response = await ky.post(endpoint, { json: { address: address, item: item, tokenAddress: tokenAddress } }).json() as any;
     const result = response.result;
     const balanceResponse = (result as BalanceResponse);
     if (_.isNumber(balanceResponse.amount)) {

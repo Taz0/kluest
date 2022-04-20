@@ -26,7 +26,7 @@ const UIRewardItem: NextPage<UIRewardItemProps> = (props) => {
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
       const item = form.formItem.value;
-      if (!_.isString(item)) {
+      if (!_.isString(item) || _.isEmpty(item)) {
         alert("Invalid item id");
         return;
       }

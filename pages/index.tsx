@@ -1,14 +1,15 @@
+import { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+
 import styles from '../styles/Home.module.css';
 import UIAirDrop from './UIAirdrop';
-import UIBalance from './UIBalance';
 import UIContractSelector from './UIContractSelector';
-import { useState } from 'react';
 import UIChestReward from './UIChestReward';
 import UIUserItems from './UIUserItems';
 import UIRewardItem from './UIRewardItem';
+import UIItemBalance from './UIItemBalance';
 
 const Home: NextPage = (props) => {
 
@@ -32,7 +33,7 @@ const Home: NextPage = (props) => {
         <UIContractSelector defaultContractAddress={contractAddress}
           setContractAddress={setContractAddress} />
         <hr />
-        <UIBalance contractAddress={contractAddress} />
+        <UIItemBalance contractAddress={contractAddress} />
         <hr />
         <UIAirDrop contractAddress={contractAddress} />
         <hr />
