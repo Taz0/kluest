@@ -3,12 +3,13 @@ import { Form, Row, Button, Container } from 'react-bootstrap';
 import { ReactElement, useState } from 'react';
 import LMHTTPClient from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
+import UIUserItem from './UIUserItem';
 
-interface UIUserItems {
+interface UIUserItemsProps {
   contractAddress: string;
 }
 
-const UIChestReward: NextPage<UIUserItems> = (props) => {
+const UIUserItems: NextPage<UIUserItemsProps> = (props) => {
 
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -72,8 +73,19 @@ const UIChestReward: NextPage<UIUserItems> = (props) => {
       return undefined;
     }
 
-    return (<span className="m-3">Result: {requestResult}</span>);
+    const listImages = JSON.parse(requestResult) as string[];
+    const imageComponents = listImages.map(itemId => <UIUserItem itemId={itemId} />);
+
+    return (
+      <div>
+        <span className="m-3">Result: {requestResult}</span>
+        <div>
+          {imageComponents}
+        </div>
+      </div>
+    );
+
   }
 };
 
-export default UIChestReward;
+export default UIUserItems;

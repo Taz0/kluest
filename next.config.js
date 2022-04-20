@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ['kluest.com'],
+  },
   // experimental: {
   //   outputStandalone: true,
   // },
@@ -18,6 +21,6 @@ const nextConfig = {
   //     }
   //   ]
   // }
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
