@@ -13,7 +13,8 @@ import UIItemBalance from './UIItemBalance';
 
 const Home: NextPage = (props) => {
 
-  const [contractAddress, setContractAddress] = useState(process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS || 'no default contract found!');
+  // const [contractAddress, setContractAddress] = useState(process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS || 'no default contract found!');
+  const contractAddress = process.env.NEXT_PUBLIC_TOKEN_CONTRACT_ADDRESS || 'no default contract found!';
 
   return (
     <div className={styles.container}>
@@ -29,9 +30,6 @@ const Home: NextPage = (props) => {
         </h1>
         <h2>Telos EVM Test Panel</h2>
 
-        <hr />
-        <UIContractSelector defaultContractAddress={contractAddress}
-          setContractAddress={setContractAddress} />
         <hr />
         <UIItemBalance contractAddress={contractAddress} />
         <hr />
