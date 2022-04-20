@@ -10,7 +10,7 @@ const UIUserItem: NextPage<UIUserItemProps> = (props) => {
 
   const url = `https://kluest.com/pics/${props.itemId}.jpg`;
   return (
-    <a href={url} target="_blank">
+    <a href={url} target="_blank" rel="noreferrer">
       <Image className="border m-1" src={url} alt="Not found" width="100" height="100" />
     </a>
   );

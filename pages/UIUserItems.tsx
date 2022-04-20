@@ -74,7 +74,7 @@ const UIUserItems: NextPage<UIUserItemsProps> = (props) => {
     }
 
     const listImages = JSON.parse(requestResult) as string[];
-    const imageComponents = listImages.map(itemId => <UIUserItem itemId={itemId} />);
+    const imageComponents = listImages.map(itemId => <UIUserItem key={itemId} itemId={itemId} />);
 
     return (
       <div>
