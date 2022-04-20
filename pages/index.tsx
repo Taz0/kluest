@@ -1,13 +1,14 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import UIAirDrop from './UIAirdrop'
-import UIBalance from './UIBalance'
-import UIContractSelector from './UIContractSelector'
-import { useState } from 'react'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
+import UIAirDrop from './UIAirdrop';
+import UIBalance from './UIBalance';
+import UIContractSelector from './UIContractSelector';
+import { useState } from 'react';
 import UIChestReward from './UIChestReward';
-
+import UIUserItems from './UIUserItems';
+import UIRewardItem from './UIRewardItem';
 
 const Home: NextPage = (props) => {
 
@@ -27,15 +28,19 @@ const Home: NextPage = (props) => {
         </h1>
         <h2>Telos EVM Test Panel</h2>
 
-        <hr/>
-        <UIContractSelector defaultContractAddress={contractAddress}
-         setContractAddress={setContractAddress}/>
         <hr />
-        <UIBalance contractAddress={contractAddress}/>
+        <UIContractSelector defaultContractAddress={contractAddress}
+          setContractAddress={setContractAddress} />
+        <hr />
+        <UIBalance contractAddress={contractAddress} />
         <hr />
         <UIAirDrop contractAddress={contractAddress} />
         <hr />
         <UIChestReward contractAddress={contractAddress} />
+        <hr />
+        <UIRewardItem contractAddress={contractAddress} />
+        <hr />
+        <UIUserItems contractAddress={contractAddress} />
       </main>
 
       <footer className={styles.footer}>
@@ -51,7 +56,7 @@ const Home: NextPage = (props) => {
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

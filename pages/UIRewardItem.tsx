@@ -4,11 +4,11 @@ import { ReactElement, useState } from 'react';
 import LMHTTPClient from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
 
-interface UIChestRewardProps {
+interface UIRewardItemProps {
   contractAddress: string;
 }
 
-const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
+const UIRewardItem: NextPage<UIRewardItemProps> = (props) => {
 
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -25,20 +25,18 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
-      const amount = form.formAmount.value;
-
-      const amountParam = _.parseInt(amount);
-      if (!_.isNumber(amountParam) || _.isNaN(amountParam)) {
-        alert("Invalid amount");
+      const item = form.formItem.value;
+      if (!_.isString(item)) {
+        alert("Invalid item id");
         return;
       }
 
       setRewardResult("");
       setLoading(true);
-      LMHTTPClient.sendChestReward(address, amountParam)
+      LMHTTPClient.sendRewardItem(address, item)
         .then((response) => {
           const result = response.result;
-          console.log(`chestreward result is ${result}`);
+          console.log(`reward item result is ${result}`);
 
           if (!_.isUndefined(response.message)) {
             setRewardResult(response.message);
@@ -54,7 +52,7 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
 
   return (
     <Container>
-      <h4>Chest reward:</h4>
+      <h4>Reward item:</h4>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group className="mb-3" controlId="formWalletAddress">
@@ -66,13 +64,13 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
           </Form.Group>
         </Row>
         <Row className="mb-3">
-          <Form.Group className="mb-3" controlId="formAmount">
-            <Form.Label>Amount in millis (1000 is equal to 1 token)</Form.Label>
-            <Form.Control required type="number" placeholder="1000" defaultValue="1000" />
+          <Form.Group className="mb-3" controlId="formItem">
+            <Form.Label>Item Id (Not 0)</Form.Label>
+            <Form.Control required type="text" placeholder="id" />
           </Form.Group>
         </Row>
         <Button variant="primary" disabled={isLoading} type="submit">
-          {isLoading ? 'Loading...' : 'Give reward'}
+          {isLoading ? 'Loading...' : 'Reward item'}
         </Button>
         {showResult()}
       </Form>
@@ -89,4 +87,4 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
 
 };
 
-export default UIChestReward;
+export default UIRewardItem;

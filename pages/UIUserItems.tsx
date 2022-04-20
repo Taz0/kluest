@@ -4,15 +4,15 @@ import { ReactElement, useState } from 'react';
 import LMHTTPClient from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
 
-interface UIChestRewardProps {
+interface UIUserItems {
   contractAddress: string;
 }
 
-const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
+const UIChestReward: NextPage<UIUserItems> = (props) => {
 
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [rewardResult, setRewardResult] = useState("");
+  const [requestResult, setRequestResult] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -25,23 +25,17 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
     const form = event.currentTarget as HTMLFormElement;
     if (form.checkValidity() === true) {
       const address = form.formWalletAddress.value;
-      const amount = form.formAmount.value;
 
-      const amountParam = _.parseInt(amount);
-      if (!_.isNumber(amountParam) || _.isNaN(amountParam)) {
-        alert("Invalid amount");
-        return;
-      }
 
-      setRewardResult("");
+      setRequestResult("");
       setLoading(true);
-      LMHTTPClient.sendChestReward(address, amountParam)
+      LMHTTPClient.getUserItems(address)
         .then((response) => {
           const result = response.result;
-          console.log(`chestreward result is ${result}`);
+          console.log(`user items result is ${result}`);
 
           if (!_.isUndefined(response.message)) {
-            setRewardResult(response.message);
+            setRequestResult(JSON.stringify(response.message));
           }
 
           setLoading(false);
@@ -54,7 +48,7 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
 
   return (
     <Container>
-      <h4>Chest reward:</h4>
+      <h4>User items:</h4>
       <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group className="mb-3" controlId="formWalletAddress">
@@ -65,14 +59,8 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
             </Form.Text>
           </Form.Group>
         </Row>
-        <Row className="mb-3">
-          <Form.Group className="mb-3" controlId="formAmount">
-            <Form.Label>Amount in millis (1000 is equal to 1 token)</Form.Label>
-            <Form.Control required type="number" placeholder="1000" defaultValue="1000" />
-          </Form.Group>
-        </Row>
         <Button variant="primary" disabled={isLoading} type="submit">
-          {isLoading ? 'Loading...' : 'Give reward'}
+          {isLoading ? 'Loading...' : 'Get user items'}
         </Button>
         {showResult()}
       </Form>
@@ -80,13 +68,12 @@ const UIChestReward: NextPage<UIChestRewardProps> = (props) => {
   );
 
   function showResult(): ReactElement | undefined {
-    if (rewardResult.length === 0 || isLoading) {
+    if (requestResult.length === 0 || isLoading) {
       return undefined;
     }
 
-    return (<span className="m-3">Result: {rewardResult}</span>);
+    return (<span className="m-3">Result: {requestResult}</span>);
   }
-
 };
 
 export default UIChestReward;

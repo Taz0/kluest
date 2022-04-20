@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { Form, Row, Button, Container } from 'react-bootstrap';
 import { ReactElement, useState } from 'react';
-import LMHTTPClient, { RewardResponse } from '../utils/httpClient/LMHTTPClient';
+import LMHTTPClient, { RequestResponse } from '../utils/httpClient/LMHTTPClient';
 import _ from 'lodash';
 
 interface UIAirDropProps {
@@ -13,11 +13,6 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
   const [validated, setValidated] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [airdropResult, setAirdropResult] = useState("");
-
-  const errorInRequest = (error: string) => { 
-    setLoading(false);
-    setAirdropResult("Error in request: ${error}");
-  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -41,11 +36,10 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
           if (!_.isUndefined(response.message)) {
             setAirdropResult(response.message);
           }
-
-          setLoading(false);
         }).catch((error) => {
-          console.error(error);
-          errorInRequest(error.message || 'unknown error');
+          setAirdropResult(error.message || 'unknown error');
+        }).finally(() => {
+          setLoading(false);
         });
     }
     setValidated(true);
@@ -77,7 +71,7 @@ const UIAirDrop: NextPage<UIAirDropProps> = (props) => {
       return undefined;
     }
 
-    return (<span className="m-3">Airdrop done, result: ${airdropResult}</span>);
+    return (<span className="m-3">Result: {airdropResult}</span>);
   }
 
 };
